@@ -7,13 +7,16 @@ import { progressSyncConfig } from '../lib/progress-sync-config';
   <form class="sync-form" method="dialog" data-sync-email>
     <label for="sync-email">E-mail</label>
     <input id="sync-email" name="email" type="email" autocomplete="email" maxlength="254" required />
-    <button type="submit" class="button secondary">Poslat přihlašovací kód</button>
+    <button type="submit" class="button secondary">Poslat přihlašovací e-mail</button>
   </form>
-  <form class="sync-form" method="dialog" data-sync-code hidden>
-    <label for="sync-code">Kód z e-mailu</label>
-    <input id="sync-code" name="code" type="text" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]{6,10}" maxlength="10" required />
-    <button type="submit" class="button">Přihlásit se</button>
-  </form>
+  <details data-sync-code-option hidden>
+    <summary>Mám v e-mailu číselný kód</summary>
+    <form class="sync-form" method="dialog" data-sync-code>
+      <label for="sync-code">Kód z e-mailu</label>
+      <input id="sync-code" name="code" type="text" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]{6,10}" maxlength="10" required />
+      <button type="submit" class="button">Přihlásit se</button>
+    </form>
+  </details>
   <div data-sync-account hidden>
     <p class="sync-account">Přihlášeno jako <strong data-sync-address></strong></p>
     <p class="field-status" role="status" data-sync-status></p>

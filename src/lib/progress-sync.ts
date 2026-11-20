@@ -11,8 +11,18 @@ type Preference = 'local' | 'cloud';
 type Status = 'pending' | 'saved' | 'offline' | 'notes' | 'replacement';
 
 if (!progressSyncConfig) throw new Error('Synchronizace nemá nastavený Supabase.');
+const callbackParameters = ['code', 'sb_flow_id', 'error', 'error_code', 'error_description'];
+const pageUrl = new URL(window.location.href);
+const fragments = new URLSearchParams(pageUrl.hash.slice(1));
+const isLinkCallback = Boolean(document.querySelector('[data-progress-sync]')) && callbackParameters.some(
+  (name) => pageUrl.searchParams.has(name) || fragments.has(name),
+);
 const client = createClient(progressSyncConfig.url, progressSyncConfig.key, {
-  auth: { storageKey: 'ai-akademie-auth:' + progressSyncConfig.scope, detectSessionInUrl: false },
+  auth: {
+    storageKey: 'ai-akademie-auth:' + progressSyncConfig.scope,
+    flowType: 'pkce',
+    detectSessionInUrl: isLinkCallback,
+  },
   global: {
     fetch: (input, init) => {
       const timeout = AbortSignal.timeout(12_000);
@@ -182,6 +192,7 @@ window.setInterval(() => { if (user && !document.hidden) schedule(); }, 30_000);
 export function connectProgressPanel(panel: HTMLElement) {
   const emailForm = panel.querySelector<HTMLFormElement>('[data-sync-email]')!;
   const codeForm = panel.querySelector<HTMLFormElement>('[data-sync-code]')!;
+  const codeOption = panel.querySelector<HTMLDetailsElement>('[data-sync-code-option]')!;
   const signedIn = panel.querySelector<HTMLElement>('[data-sync-account]')!;
   const message = panel.querySelector<HTMLElement>('[data-sync-status]')!;
   const action = panel.querySelector<HTMLElement>('[data-sync-action]')!;
@@ -196,10 +207,10 @@ export function connectProgressPanel(panel: HTMLElement) {
     replacement: 'Na jiném zařízení byl pokrok nahrazen nebo resetován. Vyber, kterou kopii chceš zachovat. Svoji kopii můžeš nejdřív exportovat.',
   };
   let email = '';
-  let busy = false;
+  let busy = isLinkCallback;
   function render() {
     emailForm.hidden = Boolean(user);
-    codeForm.hidden = Boolean(user) || !email;
+    codeOption.hidden = Boolean(user) || !email;
     signedIn.hidden = !user;
     address.textContent = user?.email || '';
     message.textContent = user ? messages[status] : '';
@@ -223,12 +234,19 @@ export function connectProgressPanel(panel: HTMLElement) {
     event.preventDefault();
     const requested = String(new FormData(emailForm).get('email') ?? '').trim();
     void run(async () => {
-      const { error } = await client.auth.signInWithOtp({ email: requested });
+      const redirect = new URL(window.location.href);
+      redirect.search = '';
+      redirect.hash = '';
+      const { error } = await client.auth.signInWithOtp({
+        email: requested,
+        options: { emailRedirectTo: redirect.href },
+      });
       if (error) throw error;
       email = requested;
       codeForm.reset();
-      action.textContent = 'Přihlašovací kód byl odeslán. Opiš ho z e-mailu.';
-    }, 'Kód se nepodařilo odeslat. Zkontroluj adresu a zkus to znovu za chvíli.');
+      codeOption.open = false;
+      action.textContent = 'E-mail byl odeslán. Otevři přihlašovací odkaz ve stejném prohlížeči, ve kterém sis ho vyžádal/a.';
+    }, 'Přihlašovací e-mail se nepodařilo odeslat. Zkontroluj adresu a zkus to znovu za chvíli.');
   });
   codeForm.addEventListener('submit', (event) => {
     event.preventDefault();
@@ -272,4 +290,20 @@ export function connectProgressPanel(panel: HTMLElement) {
   });
   document.addEventListener(stateEvent, render);
   render();
+
+  if (isLinkCallback) {
+    action.textContent = 'Ověřuji přihlašovací odkaz…';
+    const failure = 'Odkaz vypršel nebo se otevřel v jiném prohlížeči. Vyžádej si nový e-mail v prohlížeči, ve kterém ho otevřeš.';
+    void client.auth.initialize().then(({ error }) => {
+      const remaining = new URL(window.location.href);
+      const hash = new URLSearchParams(remaining.hash.slice(1));
+      const failed = error || callbackParameters.some((name) => remaining.searchParams.has(name) || hash.has(name));
+      if (failed) {
+        for (const name of callbackParameters) remaining.searchParams.delete(name);
+        if (callbackParameters.some((name) => hash.has(name))) remaining.hash = '';
+        window.history.replaceState(window.history.state, '', remaining);
+      }
+      action.textContent = failed ? failure : '';
+    }).catch(() => { action.textContent = failure; }).finally(() => { busy = false; render(); });
+  }
 }

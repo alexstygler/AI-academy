@@ -1,5 +1,6 @@
 import { after, before, test } from 'node:test';
 import assert from 'node:assert/strict';
+import { createHash } from 'node:crypto';
 import { chromium } from 'playwright';
 import AxeBuilder from '@axe-core/playwright';
 
@@ -209,7 +210,7 @@ test('synchronizace přenese vybraný místní pokrok, sdílí poznámky a oddě
   ]);
   const rows = new Map();
   const tokens = new Map();
-  const requested = new Set();
+  const requested = new Map();
   const contexts = [];
   const errors = [];
   const cors = {
@@ -230,19 +231,28 @@ test('synchronizace přenese vybraný místní pokrok, sdílí poznámky a oddě
       if (req.method() === 'OPTIONS') return intercept.fulfill({ status:204, headers:cors });
       const body = req.postData() ? req.postDataJSON() : null;
       if (url.pathname === '/auth/v1/otp') {
-        requested.add(body.email);
+        const redirect = new URL(url.searchParams.get('redirect_to'));
+        assert.equal(redirect.origin + redirect.pathname, dashboard);
+        assert.equal(body.code_challenge_method, 's256');
+        assert.ok(body.code_challenge);
+        requested.set(body.email, { redirect, challenge: body.code_challenge });
         return response({});
       }
-      if (url.pathname === '/auth/v1/verify') {
-        assert.equal(body.token, '654321');
-        assert.equal(requested.has(body.email), true);
-        const id = accounts.get(body.email);
+      const exchange = url.pathname === '/auth/v1/token' && url.searchParams.get('grant_type') === 'pkce';
+      if (exchange || url.pathname === '/auth/v1/verify') {
+        const email = exchange ? body.auth_code : body.email;
+        const pending = requested.get(email);
+        assert.ok(pending);
+        if (exchange) {
+          assert.equal(createHash('sha256').update(body.code_verifier).digest('base64url'),pending.challenge);
+        } else assert.equal(body.token, '654321');
+        const id = accounts.get(email);
         assert.ok(id);
         const jwt = ['{"alg":"HS256","typ":"JWT"}', JSON.stringify({sub:id,exp:Math.floor(Date.now()/1000)+3600}), id]
           .map((part) => Buffer.from(part).toString('base64url')).join('.');
         tokens.set(jwt, id);
         return response({ access_token:jwt, refresh_token:'test-refresh-token', expires_in:3600, token_type:'bearer',
-          user:{id,email:body.email,aud:'authenticated',role:'authenticated',user_metadata:{},app_metadata:{}} });
+          user:{id,email,aud:'authenticated',role:'authenticated',user_metadata:{},app_metadata:{}} });
       }
       if (url.pathname === '/auth/v1/logout') return intercept.fulfill({ status:204, headers:cors });
       const id = tokens.get(req.headers().authorization?.replace('Bearer ', ''));
@@ -270,13 +280,22 @@ test('synchronizace přenese vybraný místní pokrok, sdílí poznámky a oddě
   const dashboard = route('pokrok/', liveBase);
   const lesson = route('lekce/jak-model-pracuje/', liveBase);
   const doneRow = (page) => page.locator('[data-progress-row="jak-model-pracuje"] [data-state]');
-  async function login(page, email) {
+  async function login(page, email, useCode = false) {
     await page.goto(dashboard);
     await page.getByRole('textbox', { name:'E-mail', exact:true }).fill(email);
-    await page.getByRole('button', { name:'Poslat přihlašovací kód' }).click();
-    await page.getByLabel('Kód z e-mailu').fill('654321');
-    await page.getByRole('button', { name:'Přihlásit se', exact:true }).click();
+    await page.getByRole('button', { name:'Poslat přihlašovací e-mail' }).click();
+    await page.getByText('E-mail byl odeslán.', { exact:false }).waitFor();
+    if (useCode) {
+      await page.getByText('Mám v e-mailu číselný kód', { exact:true }).click();
+      await page.getByLabel('Kód z e-mailu').fill('654321');
+      await page.getByRole('button', { name:'Přihlásit se', exact:true }).click();
+    } else {
+      const callback = new URL(requested.get(email).redirect);
+      callback.searchParams.set('code', email);
+      await page.goto(callback.href);
+    }
     await page.getByText('Pokrok je synchronizovaný.', { exact:true }).waitFor();
+    assert.equal(page.url(),dashboard);
   }
   const save = (page) => page.waitForResponse((result) => result.url().endsWith('/rpc/save_academy_progress') && result.ok());
   try {
@@ -311,7 +330,10 @@ test('synchronizace přenese vybraný místní pokrok, sdílí poznámky a oddě
     await computer.goto(lesson);
     await computer.waitForFunction(() => document.querySelector('textarea[name=note]')?.value === 'Poznámka z druhého zařízení');
     const otherAccount = await device();
-    await login(otherAccount, 'student@example.test');
+    await otherAccount.goto(dashboard + '?code=from-another-browser');
+    await otherAccount.getByText('Odkaz vypršel nebo se otevřel v jiném prohlížeči.', {exact:false}).waitFor();
+    assert.equal(otherAccount.url(),dashboard);
+    await login(otherAccount, 'student@example.test', true);
     assert.equal(await doneRow(otherAccount).textContent(),'Neotevřeno');
 
     await computer.goto(dashboard);
