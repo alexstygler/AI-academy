@@ -1,0 +1,9 @@
+{
+  "version": 1,
+  "fiction": true,
+  "documents": [
+    { "id": "T01", "title": "Cvičný tarif A", "locator": "§ 2", "text": "Standardní pouzdro mezi hlavními stanicemi stojí 40 haléřů.", "published": null, "from": "1937-02-01", "to": "1937-02-28", "amount": 40, "validity": "1. až 28. února 1937 včetně" },
+    { "id": "T02", "title": "Cvičný tarif B", "locator": "§ 2", "text": "Standardní pouzdro mezi hlavními stanicemi stojí 60 haléřů.", "published": "1937-02-24", "from": "1937-03-01", "to": null, "amount": 60, "validity": "Účinný od 1. března 1937 · vyhlášen 24. února" },
+    { "id": "T03", "title": "Cvičný provozní zápis", "locator": "bod 4", "text": "Po trase A–B jede ve středu testovací pouzdro osm minut.", "published": null, "from": null, "to": null, "amount": null, "validity": "Pozorování jedné zkušební jízdy" }
+  ]
+}

@@ -1,0 +1,19 @@
+[Unit]
+Description=Sber primarnich zdroju do privatniho konceptu
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=oneshot
+User=akademie-editor
+Group=akademie-editor
+StateDirectory=akademie-editorial
+StateDirectoryMode=0700
+WorkingDirectory=/opt/ai-akademie
+Environment=EDITORIAL_DB=/var/lib/akademie-editorial/issues.sqlite
+ExecStart=/usr/bin/node scripts/edition.mjs
+StandardOutput=null
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true

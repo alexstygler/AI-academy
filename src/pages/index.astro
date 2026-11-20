@@ -1,0 +1,75 @@
+---
+import { ArrowRight, ArrowUpRight, BookOpen, Clock3, FlaskConical, Target, TrendingUp, Zap } from 'lucide-astro';
+import Shell from '../components/Shell.astro';
+import WeekRow from '../components/WeekRow.astro';
+import { lessons, lessonUrl, url } from '../lib/course';
+const next = lessons[0]!;
+---
+<Shell title="Přehled">
+  <section class="welcome">
+    <div><p class="eyebrow welcome-label"><span></span> TVŮJ STUDIJNÍ PROSTOR</p><h1>Ahoj, Alexi<span>.</span></h1><p>Od prvního promptu k vlastní AI aplikaci.</p></div>
+    <div class="course-pill"><span></span> Praktický kurz <b>·</b> 18 týdnů</div>
+  </section>
+  <div class="dashboard">
+    <div class="primary-column">
+      <section class="hero">
+        <div class="hero-art" aria-hidden="true"><div class="orbit orbit-a"></div><div class="orbit orbit-b"></div><div class="orbit orbit-c"></div><div class="orbit orbit-d"></div><div class="orb-glow"></div><div class="orb"><i></i></div><div class="orbit-dot dot-a"></div><div class="orbit-dot dot-b"></div><div class="orbit-dot dot-c"></div><div class="orbit-dot dot-d"></div><div class="art-plus plus-a">+</div><div class="art-plus plus-b">+</div></div>
+        <div class="hero-content">
+          <p class="hero-label"><Zap size={14} fill="currentColor" /> DALŠÍ KROK</p>
+          <span class="hero-meta" data-next-meta>Týden 1 <span>·</span> {next.minutes} min</span>
+          <h2 data-next-title>{next.title}</h2>
+          <p data-next-goal>{next.goal}</p>
+          <a class="button hero-button" href={lessonUrl(next.id)} data-next-link>Začít lekci <ArrowRight size={17} /></a>
+        </div>
+      </section>
+      <section class="track">
+        <div class="section-heading"><div><h2>Studijní plán</h2><p>Devět modulů, od základů až po vydání.</p></div><a class="text-link" href={url('lekce')}>Celý plán <ArrowRight size={16} /></a></div>
+        <div class="panel track-list">{[0,1,2,3,4,5,6,7,8].map((index) => <WeekRow index={index} />)}</div>
+      </section>
+    </div>
+    <div class="secondary-column">
+      <section class="panel progress-card">
+        <div class="card-heading"><span class="tile-icon blue"><TrendingUp size={20} /></span><a class="icon-button" href={url('pokrok')} aria-label="Otevřít můj pokrok"><ArrowUpRight size={18} /></a></div>
+        <h2>Tvůj pokrok</h2>
+        <div class="progress-count"><strong data-progress-count>0</strong><span> / {lessons.length} lekcí</span><b data-progress-percent>0 %</b></div>
+        <progress value="0" max={lessons.length} aria-label="Dokončené lekce" data-progress-bar></progress>
+        <p data-progress-message>Pokrok roste po splnění ověření v lekci.</p>
+        <div class="progress-info"><BookOpen size={16} /><span>Lekce a pokrok máš i bez účtu.</span></div>
+      </section>
+      <section class="panel project-card">
+        <span class="tile-icon mint"><FlaskConical size={20} /></span>
+        <p class="eyebrow">PRŮCHOZÍ PROJEKT</p>
+        <h2>Potrubní pošta</h2>
+        <p>Od pěti otázek nad cvičnými prameny až k vlastnímu botovi s citacemi.</p>
+        <a class="text-link" href={url('dilna')}>Otevřít dílnu <ArrowRight size={16} /></a>
+      </section>
+      <section class="panel rhythm-card">
+        <span class="tile-icon peach"><Clock3 size={20} /></span><div><h2>6–8 hodin týdně</h2><p>Teorie, vlastní stavba a čas na ověření.</p></div>
+      </section>
+      <a class="panel quick-card" href={url('dilna') + '#zkouska'}><Target size={19} /><span>Zkouška přenosu dovedností</span><ArrowUpRight size={16} /></a>
+    </div>
+  </div>
+  <script type="application/json" id="dashboard-data" set:html={JSON.stringify(lessons.map((lesson) => ({id:lesson.id,href:lessonUrl(lesson.id),title:lesson.title,week:lesson.week,minutes:lesson.minutes,goal:lesson.goal}))).replace(/</g, '\\u003c')} />
+  <script>
+    import { readProgress, progressMessage } from '../lib/progress';
+    const data = JSON.parse(document.querySelector('#dashboard-data')?.textContent || '[]') as Array<{id:string;href:string;title:string;week:number;minutes:number;goal:string}>;
+    function refresh() {
+      const state = readProgress();
+      const done = data.filter((lesson) => state.data.lessons[lesson.id]?.completed).length;
+      const next = data.find((lesson) => !state.data.lessons[lesson.id]?.completed) || data[0]!;
+      document.querySelector('[data-progress-count]')!.textContent = String(done);
+      document.querySelector('[data-progress-percent]')!.textContent = Math.round(done / data.length * 100) + ' %';
+      document.querySelector<HTMLProgressElement>('[data-progress-bar]')!.value = done;
+      document.querySelector('[data-progress-message]')!.textContent = state.problem ? progressMessage(state.problem) : 'Pokrok roste po splnění ověření v lekci.';
+      document.querySelector('[data-next-title]')!.textContent = done === data.length ? 'Zopakuj si kurz' : next.title;
+      document.querySelector('[data-next-meta]')!.textContent = `Týden ${next.week} · ${next.minutes} min`;
+      document.querySelector('[data-next-goal]')!.textContent = done === data.length ? 'Všechna ověření máš splněná. Vrať se k tématům a zkus novou variantu.' : next.goal;
+      const link = document.querySelector<HTMLAnchorElement>('[data-next-link]')!;
+      link.href = next.href;
+      link.firstChild!.textContent = done === data.length ? 'Otevřít první lekci ' : state.data.lessons[next.id]?.opened ? 'Pokračovat v lekci ' : 'Začít lekci ';
+    }
+    refresh();
+    window.addEventListener('pageshow', refresh);
+    window.addEventListener('storage', refresh);
+  </script>
+</Shell>

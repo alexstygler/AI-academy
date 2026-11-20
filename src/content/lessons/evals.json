@@ -1,0 +1,72 @@
+{
+  "version": 1,
+  "id": "evals",
+  "week": 15,
+  "title": "Evals a měření kvality",
+  "goal": "Sestav opakovatelnou sadu a porovnej změnu podle konkrétní rubriky.",
+  "minutes": 50,
+  "prerequisites": [
+    "agenti"
+  ],
+  "sourceChapter": "Týden 15 · Evals a provoz",
+  "sourcePage": 29,
+  "theory": "Připrav běžné případy, okraje i očekávaná selhání. U případů ulož vstup, očekávání a důkaz. Část drž mimo ladění a použij ji až po výběru varianty.",
+  "detail": "Odděl přesné strojové kontroly (schéma, ID, datum) od posouzení podloženosti či úplnosti. Hodnotitele-model kalibruj na ručně ohodnocených odpovědích.",
+  "example": "Verze A cituje správně 18/24 případů, B 20/24, ale B uvedla neexistující zdroj. Pokud je vymyšlená citace blokující, B ještě nevydávej.",
+  "guided": "Na 24 případech z dílny navrhni rozdělení 18 pro iteraci a 6 pro závěrečný test. Rozepiš, co půjde měřit kódem.",
+  "independent": "Vymysli rubriku 0–2 pro úplnost, podloženost a zacházení s nejistotou. Napiš podmínku přijetí.",
+  "hint": "Vymez kritickou chybu, která převáží souhrnný průměr.",
+  "sample": "Souhrn zahrnuje počty i cenu. Neexistující ID a záměna účinnosti blokují vydání. Odložených šest případů neslouží k dalšímu ladění.",
+  "questions": [
+    {
+      "id": "q1",
+      "prompt": "Proč držíš část sady mimo ladění?",
+      "options": [
+        {
+          "text": "Aby bylo ověření kratší",
+          "feedback": "Odložené otázky přidávají závěrečné měření. Jejich účelem je omezit zkreslení z ladění."
+        },
+        {
+          "text": "Pro nezávislejší závěrečné měření",
+          "feedback": "Omezuješ přizpůsobení přímo známým případům."
+        },
+        {
+          "text": "Aby se odstranily složité otázky",
+          "feedback": "Složitost v odložené části potřebuješ, pokud odpovídá skutečnému použití."
+        }
+      ],
+      "answer": 1
+    },
+    {
+      "id": "q2",
+      "prompt": "Co ověří deterministický test?",
+      "options": [
+        {
+          "text": "Pocit čtenáře",
+          "feedback": "Pocit čtenáře zaznamenej rubrikou či výzkumem. Strojová kontrola potřebuje přesný kontrakt."
+        },
+        {
+          "text": "Přesvědčivost stylu",
+          "feedback": "Přesvědčivost obvykle vyžaduje posouzení. Existenci ID ověříš nad seznamem."
+        },
+        {
+          "text": "Existenci citovaného ID",
+          "feedback": "Příslušnost ID do seznamu má jednoznačný výsledek."
+        }
+      ],
+      "answer": 2
+    }
+  ],
+  "rubric": [
+    "Popsal/a jsem postup a jeho výsledek.",
+    "Výsledek jsem ověřil/a podle konkrétního podkladu nebo testu.",
+    "Uvedl/a jsem hraniční případ či nejistotu a co s ní udělám."
+  ],
+  "sources": [
+    {
+      "label": "OpenAI · Evals",
+      "url": "https://platform.openai.com/docs/guides/evals"
+    }
+  ],
+  "code": null
+}

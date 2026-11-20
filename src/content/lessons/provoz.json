@@ -1,0 +1,72 @@
+{
+  "version": 1,
+  "id": "provoz",
+  "week": 16,
+  "title": "Provoz, náklady a oprávnění",
+  "goal": "Navrhni vynucené limity a odolný běh s minimem citlivých údajů.",
+  "minutes": 45,
+  "prerequisites": [
+    "evals"
+  ],
+  "sourceChapter": "Týden 16 · Evals a provoz",
+  "sourcePage": 29,
+  "theory": "Zaznamenávej ID běhu, verzi, model, trvání, tokeny a stav. Běžné logy nemají obsahovat klíče nebo citlivý vstup. Sleduj medián a p95 latence stejně jako náklad na užitečný výsledek.",
+  "detail": "Timeout a omezený retry řeší dočasné chyby. Pro zápis použij idempotentní klíč. Kvótu vynucuj před voláním a při souběhu ji rezervuj atomicky ve sdíleném úložišti.",
+  "example": "Zápis konceptu se podařil, ale odpověď se ztratila. Druhý pokus najde stejný klíč týdne a bezpečně obnoví jeden návrh.",
+  "guided": "Otestuj simulovaný 503, vyčerpanou kvótu a opakovanou událost. Po každém případu zkontroluj stav.",
+  "independent": "Navrhni limit pro tutora na identitu a den. Přidej pravidlo, podle kterého poznáš, že se proti limitu provedlo rezervování.",
+  "hint": "Testuj i souběžné požadavky před voláním poskytovatele.",
+  "sample": "Před voláním se atomicky zvýší počítadlo identity i celkového dne. Při chybě konzervativně zůstává rezervované. Uživatel dostane místní nápovědu.",
+  "questions": [
+    {
+      "id": "q1",
+      "prompt": "Kdy se rezervuje kvóta volání?",
+      "options": [
+        {
+          "text": "Před voláním poskytovatele",
+          "feedback": "Rezervace před voláním brání přesažení při souběhu."
+        },
+        {
+          "text": "Po vyčerpání dne",
+          "feedback": "Pokud rezervace čeká na vyčerpání, více současných volání může limit překročit."
+        },
+        {
+          "text": "Jen po úspěšném modelovém výsledku",
+          "feedback": "Předchozí neúspěch může spotřebovat prostředky a další volání mohou být současná."
+        }
+      ],
+      "answer": 0
+    },
+    {
+      "id": "q2",
+      "prompt": "Co do běžného provozního logu patří?",
+      "options": [
+        {
+          "text": "Tajný klíč pro snadné ladění",
+          "feedback": "Klíč umožňuje volání a jeho opsání do logu rozšiřuje rozsah přístupu."
+        },
+        {
+          "text": "ID běhu, čas a stav",
+          "feedback": "Metadata umožní ladění bez zbytečného zveřejňování vstupu."
+        },
+        {
+          "text": "Celý soukromý vstup každého člověka",
+          "feedback": "Vstup může být citlivý. Běžná diagnostika potřebuje ID, čas a stav."
+        }
+      ],
+      "answer": 1
+    }
+  ],
+  "rubric": [
+    "Popsal/a jsem postup a jeho výsledek.",
+    "Výsledek jsem ověřil/a podle konkrétního podkladu nebo testu.",
+    "Uvedl/a jsem hraniční případ či nejistotu a co s ní udělám."
+  ],
+  "sources": [
+    {
+      "label": "OpenAI · Production Best Practices",
+      "url": "https://platform.openai.com/docs/guides/production-best-practices"
+    }
+  ],
+  "code": null
+}

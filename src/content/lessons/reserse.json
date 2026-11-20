@@ -1,0 +1,72 @@
+{
+  "version": 1,
+  "id": "reserse",
+  "week": 3,
+  "title": "Rešerše a ověřování",
+  "goal": "Dolož tvrzení konkrétním pramenem a rozliš publikaci od účinnosti.",
+  "minutes": 35,
+  "prerequisites": [
+    "prompting"
+  ],
+  "sourceChapter": "Týden 3 · Rešerše, data a multimodalita",
+  "sourcePage": 23,
+  "theory": "Rozděl práci na výběr kandidátů, ověření pasáží a syntézu. Před hledáním vymez otázku, místo a období. Přepiš název, datum, stránku, krátký úryvek a rozsah důkazu.",
+  "detail": "OCR a výstup hledání jsou vodítko. U částek, jmen a dat porovnej přepis přímo se skenem. Záznam označ jako doložený, odvozený, rozporný nebo nedoložený.",
+  "example": "T02 byl vyhlášen 24. února, ale je účinný až 1. března. Titulek s datem vydání sám neurčuje sazbu před účinností.",
+  "guided": "Na dílně otevři T01–T03. Ke každé z pěti otázek zapiš odpověď, datum jevu a konkrétní lokátor.",
+  "independent": "Navrhni rešeršní tabulku pro dva rozporné zápisy o stejné trase a urči, jaký další pramen by rozhodl.",
+  "hint": "Nejdřív zjisti, zda mají oba prameny stejnou působnost a časový rozsah.",
+  "sample": "Zachovej oba úryvky, jejich metadata i rozpor. Chybí-li doklad platnosti, zapiš „nedoloženo“ a požádej o vydání tarifu.",
+  "questions": [
+    {
+      "id": "q1",
+      "prompt": "Který údaj rozhoduje o sazbě dne 28. února?",
+      "options": [
+        {
+          "text": "Den, kdy soubor stáhnu",
+          "feedback": "Stažení souboru je dnešní operace bez vlivu na historickou účinnost."
+        },
+        {
+          "text": "Datum vydání novějšího tarifu",
+          "feedback": "Vyhlášení nového tarifu může nastat před změnou sazby."
+        },
+        {
+          "text": "Rozsah účinnosti konkrétního tarifu",
+          "feedback": "Zveřejnění a účinnost označují dvě různé události."
+        }
+      ],
+      "answer": 2
+    },
+    {
+      "id": "q2",
+      "prompt": "Jak ověříš nejasnou číslici z OCR?",
+      "options": [
+        {
+          "text": "Porovnám ji s obrázkem pasáže",
+          "feedback": "Přímá kontrola skenu sníží riziko chyby přepisu."
+        },
+        {
+          "text": "Použiji častější číslo z webu",
+          "feedback": "Četnost čísla ti neposkytne kontrolu přepisu konkrétní pasáže."
+        },
+        {
+          "text": "Považuji přepis za originál",
+          "feedback": "Právě přepis může mít u podobných číslic chybu. Ověř obraz pramene."
+        }
+      ],
+      "answer": 0
+    }
+  ],
+  "rubric": [
+    "Popsal/a jsem postup a jeho výsledek.",
+    "Výsledek jsem ověřil/a podle konkrétního podkladu nebo testu.",
+    "Uvedl/a jsem hraniční případ či nejistotu a co s ní udělám."
+  ],
+  "sources": [
+    {
+      "label": "Google · Gemini Notebook",
+      "url": "https://support.google.com/notebooklm/"
+    }
+  ],
+  "code": null
+}

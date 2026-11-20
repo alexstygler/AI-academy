@@ -1,0 +1,72 @@
+{
+  "version": 1,
+  "id": "prompting",
+  "week": 2,
+  "title": "Prompting a kontext",
+  "goal": "Sestav zadání s jasným cílem, podklady, formátem a stop pravidlem.",
+  "minutes": 35,
+  "prerequisites": [
+    "jak-model-pracuje"
+  ],
+  "sourceChapter": "Týden 2 · Modely a zadávání úkolů",
+  "sourcePage": 22,
+  "theory": "Dobré zadání popíše výsledek, povolené vstupy, časový nebo věcný rozsah, formát výsledku a kritérium přijetí. Ukaž jeden úplný příklad a jeden případ, kdy údaje chybí.",
+  "detail": "Upravuj vždy jednu proměnnou. Zachovej model, podklady a formát měření, potom sleduj, které chyby zmizely a které přibyly.",
+  "example": "Vypiš z přepisu sazby v polích datum, částka, jednotka, typ zásilky a citace. Chybí-li údaj, napiš „nedoloženo“ a pojmenuj potřebný pramen.",
+  "guided": "Porovnej volné zadání „vypiš ceny“ se strukturovaným příkladem. Změř počet řádků s citací a počet doplněných domněnek.",
+  "independent": "Napiš prompt pro kontrolu rozpočtu, který odliší čísla, předpoklady a chybějící vstupy. Připrav jednoznačný příklad na nule a prázdném poli.",
+  "hint": "Napiš očekávání před zkouškou a zachovej totožné vstupy v obou bězích.",
+  "sample": "Výsledek má pole částka, měna a stav. Prázdná částka má stav „chybí“, nula zůstane číslem 0. Ověř každý výsledek podle vstupu.",
+  "questions": [
+    {
+      "id": "q1",
+      "prompt": "Co nejlépe omezuje vymyšlené údaje?",
+      "options": [
+        {
+          "text": "Požadavek na citaci a stav „nedoloženo“",
+          "feedback": "Explicitní pravidlo dává ověřitelný způsob, jak zpracovat mezeru."
+        },
+        {
+          "text": "Delší zdvořilé oslovení",
+          "feedback": "Zdvořilost sama nedává modelu pravidlo pro chybějící důkaz."
+        },
+        {
+          "text": "Zákaz přiznat nejistotu",
+          "feedback": "Zákaz nejistoty může vést k vyplnění mezery domněnkou."
+        }
+      ],
+      "answer": 0
+    },
+    {
+      "id": "q2",
+      "prompt": "Jak změříš dopad jedné úpravy promptu?",
+      "options": [
+        {
+          "text": "Změním současně model a data",
+          "feedback": "Při třech změnách zároveň nepoznáš, kterou změnou výsledek vznikl."
+        },
+        {
+          "text": "Porovnám stejné případy se změnou jediné věci",
+          "feedback": "Kontrolovaný pokus omezí další příčiny rozdílu."
+        },
+        {
+          "text": "Spolehnu se na délku výstupu",
+          "feedback": "Délka měří rozsah odpovědi. Tady potřebuješ měřit správnost a podloženost."
+        }
+      ],
+      "answer": 1
+    }
+  ],
+  "rubric": [
+    "Popsal/a jsem postup a jeho výsledek.",
+    "Výsledek jsem ověřil/a podle konkrétního podkladu nebo testu.",
+    "Uvedl/a jsem hraniční případ či nejistotu a co s ní udělám."
+  ],
+  "sources": [
+    {
+      "label": "OpenAI · Prompt engineering",
+      "url": "https://platform.openai.com/docs/guides/prompt-engineering"
+    }
+  ],
+  "code": null
+}

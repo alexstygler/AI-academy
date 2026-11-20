@@ -1,0 +1,72 @@
+{
+  "version": 1,
+  "id": "tool-calling",
+  "week": 10,
+  "title": "Tool calling a rozhraní",
+  "goal": "Zpracuj návrh volání funkce a omez, k čemu má přístup.",
+  "minutes": 45,
+  "prerequisites": [
+    "api-a-json"
+  ],
+  "sourceChapter": "Týden 10 · Vlastní bot a volání funkcí",
+  "sourcePage": 26,
+  "theory": "Model navrhne název funkce a argumenty. Aplikace provede vlastní validaci vstupu, identity a oprávnění. Výsledek čtecí funkce může použít jako další kontext.",
+  "detail": "Začni nástrojem get_lesson(id) nad místními daty. Omez počet volání a vrať řízený stav pro neznámé ID. Zápis nech jako samostatnou operaci s potvrzením.",
+  "example": "Návrh get_lesson('tyden-09') vede k povolenému čtení. Požadavek na přístup k neznámému souboru skončí kontrolou argumentů před I/O.",
+  "guided": "Simuluj platné a neznámé ID. Zapiš vstup, kontrolu a odpověď rozhraní před tím, než ji dostane model.",
+  "independent": "Navrhni CLI a webové rozhraní pro tutora. Rozepiš, jak obě klientské vrstvy zpracují timeout a opakovanou událost.",
+  "hint": "Drž povolené funkce v pevném seznamu a validuj argumenty na serveru.",
+  "sample": "Validní ID načte lekci. Neznámé vrátí 404 a výpadek 503 s připravenou nápovědou. Opakovaná událost používá stejné ID.",
+  "questions": [
+    {
+      "id": "q1",
+      "prompt": "Kdo skutečně spouští funkci?",
+      "options": [
+        {
+          "text": "Model přímo v prohlížeči",
+          "feedback": "Model předává návrh s parametry a sám operaci neprovádí."
+        },
+        {
+          "text": "Libovolný externí dokument",
+          "feedback": "Dokument je podklad. Nemá aplikační přístup k operaci."
+        },
+        {
+          "text": "Aplikace po validaci návrhu",
+          "feedback": "Model navrhuje volání, provedení řídí hostitel."
+        }
+      ],
+      "answer": 2
+    },
+    {
+      "id": "q2",
+      "prompt": "Co patří k čtecímu get_lesson?",
+      "options": [
+        {
+          "text": "Volná cesta na disku",
+          "feedback": "Volná cesta je širší oprávnění. Nabídni pevný katalog podle ID."
+        },
+        {
+          "text": "Známé ID a omezená odpověď",
+          "feedback": "Úzký kontrakt omezí data i účinky nástroje."
+        },
+        {
+          "text": "Právo publikovat vydání",
+          "feedback": "Publikace je jiná operace s následky. Čtecí nástroj ji nepotřebuje."
+        }
+      ],
+      "answer": 1
+    }
+  ],
+  "rubric": [
+    "Popsal/a jsem postup a jeho výsledek.",
+    "Výsledek jsem ověřil/a podle konkrétního podkladu nebo testu.",
+    "Uvedl/a jsem hraniční případ či nejistotu a co s ní udělám."
+  ],
+  "sources": [
+    {
+      "label": "OpenAI · Function Calling",
+      "url": "https://platform.openai.com/docs/guides/function-calling"
+    }
+  ],
+  "code": null
+}

@@ -1,0 +1,17 @@
+---
+import { ArrowUpRight, BookOpen, Braces, Brain, ChartNoAxesCombined, CircuitBoard, FileSearch, Globe2, Layers3, Workflow } from 'lucide-astro';
+import { lessons, lessonUrl, modules, url } from '../lib/course';
+
+const { index, expanded = false } = Astro.props;
+const module = modules[index]!;
+const icons = [Brain, FileSearch, Braces, Workflow, CircuitBoard, Layers3, Globe2, ChartNoAxesCombined, BookOpen];
+const Icon = icons[index]!;
+const items = lessons.slice(index * 2, index * 2 + 2);
+---
+{expanded ? <section class="panel module-panel" id={`modul-${index+1}`}>
+  <div class="week-row"><span class:list={['tile-icon', module.color]}><Icon size={23} strokeWidth={1.8} /></span><div><span class="eyebrow">Týdny {module.weeks}</span><h2>{module.title}</h2><p>{module.description}</p></div></div>
+  <div class="module-lessons">{items.map((lesson) => <a href={lessonUrl(lesson.id)}><span class="lesson-number">{String(lesson.week).padStart(2,'0')}</span><span><strong>{lesson.title}</strong><small>{lesson.minutes} min · {lesson.goal}</small></span><span class="lesson-state" data-state-for={lesson.id}></span><ArrowUpRight size={17} /></a>)}</div>
+</section> :
+<a class="week-row preview-row" href={`${url('lekce')}#modul-${index+1}`}>
+  <span class:list={['tile-icon', module.color]}><Icon size={22} strokeWidth={1.8} /></span><span class="week-copy"><strong>{module.title}</strong><small>{module.description}</small></span><span class="week-range">Týdny {module.weeks}</span><ArrowUpRight size={17} class="row-arrow" />
+</a>}

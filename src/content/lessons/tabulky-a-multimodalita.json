@@ -1,0 +1,72 @@
+{
+  "version": 1,
+  "id": "tabulky-a-multimodalita",
+  "week": 4,
+  "title": "Tabulky, obrázky a zvuk",
+  "goal": "Ověř výpočet z tabulky i čísla získaná z obrázku nebo přepisu.",
+  "minutes": 45,
+  "prerequisites": [
+    "reserse"
+  ],
+  "sourceChapter": "Týden 4 · Rešerše, data a multimodalita",
+  "sourcePage": 23,
+  "theory": "V CSV stanov měnu, jednotky, desetinnou čárku, klíč řádku a pravidlo pro prázdnou hodnotu. Náklady počítej vzorcem. Model nech navrhnout strukturu, ale zkontroluj vzorec a několik řádků ručně.",
+  "detail": "Multimodální model zpracovává více typů vstupů. U obrázku odliš popis a OCR, u zvuku text, časové značky a mluvčí. Ručně prověř jména, číslice a jemné detaily.",
+  "example": "Fiktivní Sluncoro: dávka stojí 450 Kč a dá 50 sklenic. Po 10% ztrátě jich zbude 45 a náklad je 10 Kč na sklenici.",
+  "guided": "Zanes dávku do tabulky. V Claude Sheets a v Gemini v Google Sheets zkus stejný vzorec. Přidej opakující se ID a ověř, zda se součet nezměnil.",
+  "independent": "Přepiš minutu vlastního zvuku nebo text z vlastní fotografie. Najdi dvě nejistá místa a porovnej je s originálem. U Gemini Omni zkus popsat, co bys u média změřil.",
+  "hint": "Ukaž ruční mezivýpočet a u přepisu připoj čas nebo oblast obrázku.",
+  "sample": "450 / (50 × 0,9) = 10 Kč. Řádky s opakovaným ID přezkoumám před součtem. V přepisu uložím opravu se stopáží.",
+  "questions": [
+    {
+      "id": "q1",
+      "prompt": "Kdo má reprodukovatelně vypočítat součet?",
+      "options": [
+        {
+          "text": "Generativní model bez nástroje",
+          "feedback": "Generátor může navrhnout vzorec, ale bez kontrolního výpočtu součet neověří."
+        },
+        {
+          "text": "Tabulková funkce nebo skript",
+          "feedback": "Deterministický výpočet lze opakovat a ručně zkontrolovat."
+        },
+        {
+          "text": "OCR přepis obrázku",
+          "feedback": "OCR extrahuje text. Sečtení musí provést samostatná funkce nad ověřenými hodnotami."
+        }
+      ],
+      "answer": 1
+    },
+    {
+      "id": "q2",
+      "prompt": "Co u přepisu zkontroluješ přednostně?",
+      "options": [
+        {
+          "text": "Jména, čísla, jednotky a časové značky",
+          "feedback": "Chyba v čísle nebo jménu může změnit význam výsledku."
+        },
+        {
+          "text": "Počet odstavců",
+          "feedback": "Členění textu je až redakční krok. Chybně rozpoznané jméno nebo částka mění faktický význam."
+        },
+        {
+          "text": "Styl odpovědi modelu",
+          "feedback": "Plynulý přepis může obsahovat nesprávný údaj. Pro faktickou kontrolu je rozhodující originál."
+        }
+      ],
+      "answer": 0
+    }
+  ],
+  "rubric": [
+    "Popsal/a jsem postup a jeho výsledek.",
+    "Výsledek jsem ověřil/a podle konkrétního podkladu nebo testu.",
+    "Uvedl/a jsem hraniční případ či nejistotu a co s ní udělám."
+  ],
+  "sources": [
+    {
+      "label": "Google · Gemini v Tabulkách",
+      "url": "https://support.google.com/docs/answer/14218565"
+    }
+  ],
+  "code": null
+}

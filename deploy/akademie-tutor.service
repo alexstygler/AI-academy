@@ -1,0 +1,21 @@
+[Unit]
+Description=AI akademie - studijni tutor
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+User=akademie-tutor
+Group=akademie-tutor
+WorkingDirectory=/opt/ai-akademie
+EnvironmentFile=/etc/ai-akademie/tutor.env
+StateDirectory=akademie-tutor
+StateDirectoryMode=0700
+ExecStart=/usr/bin/node server/tutor.mjs
+Restart=on-failure
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

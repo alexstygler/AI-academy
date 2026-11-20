@@ -1,0 +1,70 @@
+{
+  "version": 1,
+  "id": "jak-model-pracuje",
+  "week": 1,
+  "title": "Jak model pracuje",
+  "goal": "Zjisti, co jazykový model ví, co jen odhaduje a jak jeho odpovědi ověřit.",
+  "minutes": 25,
+  "prerequisites": [],
+  "sourceChapter": "Týden 1 · Modely a zadávání úkolů",
+  "sourcePage": 22,
+  "theory": "Jazykový model rozděluje text na tokeny. Z kontextu odhaduje rozdělení pravděpodobnosti dalšího tokenu, vybere pokračování a postup opakuje. Parametry jsou hodnoty naučené při tréninku. Kontext je pracovní vstup pro aktuální běh: zadání, podklady a případně výsledky nástrojů. Paměť aplikace může uložit vybrané údaje a později je přidat do kontextu.",
+  "detail": "Plynulý text může být věcně chybný. U čísel nech výpočet na funkci, u historického tvrzení otevři konkrétní pramen a u tvůrčího zadání použij model k návrhům. Podloženost posuzuj podle důkazu a rozsahu jeho platnosti.",
+  "example": "Model napíše, že v březnu 1937 stálo standardní pouzdro 60 haléřů. V našem fiktivním korpusu to dokládá T02 § 2, účinný od 1. března. Cena pro únor se musí ověřit v T01.",
+  "guided": "Zkus nad stejným fiktivním podkladem zadat volný dotaz a dotaz, který vyžaduje ID pramene a datum účinnosti. U každé odpovědi označ, které tvrzení můžeš přímo ověřit.",
+  "independent": "Porovnej dva modely na pěti totožných úlohách. Zařaď výpočet, otázku k doloženému údaji a otázku bez důkazu. Zapiš úplnost, čas, nástrojový režim a opravy.",
+  "hint": "Rozděl odpověď na tvrzení. U každého hledej datum a lokátor. U výpočtu zaznamenej kontrolní funkci.",
+  "sample": "Fiktivní T02 § 2 potvrzuje 60 haléřů od 1. března. Expresní doručení z T02 nevyplývá. Model může navrhnout formulaci, cenu i platnost ověřuji v podkladu.",
+  "questions": [
+    {
+      "id": "q1",
+      "prompt": "Co se při běžném dotazu mění?",
+      "options": [
+        {
+          "text": "Váhy modelu během tréninku",
+          "feedback": "Váhy zachycují výsledky tréninku. Běžný dotaz přidává nový kontext, ale váhy nemění."
+        },
+        {
+          "text": "Pracovní kontext aktuálního běhu",
+          "feedback": "Zadání a dokumenty vstupují do kontextu. Parametry se běžným dotazem nepřetrénují."
+        },
+        {
+          "text": "Tokenizer se přeučí pro každý dotaz",
+          "feedback": "Tokenizer používá již daná pravidla dělení. Zpracování nového dotazu tato pravidla nemění."
+        }
+      ],
+      "answer": 1
+    },
+    {
+      "id": "q2",
+      "prompt": "Jak ověříš přesnou historickou sazbu?",
+      "options": [
+        {
+          "text": "Vyžádám si sebevědomější odpověď",
+          "feedback": "Sebevědomý tón nevypovídá o původu čísla ani o účinnosti tarifu."
+        },
+        {
+          "text": "Vyberu údaj, který model zopakuje",
+          "feedback": "Opakování stejného čísla není druhý nezávislý důkaz. Najdi pasáž s částkou a platností."
+        },
+        {
+          "text": "Otevřu původní pasáž a zkontroluji účinnost",
+          "feedback": "Ověřitelný důkaz musí dokládat částku i období platnosti."
+        }
+      ],
+      "answer": 2
+    }
+  ],
+  "rubric": [
+    "Popsal/a jsem postup a jeho výsledek.",
+    "Výsledek jsem ověřil/a podle konkrétního podkladu nebo testu.",
+    "Uvedl/a jsem hraniční případ či nejistotu a co s ní udělám."
+  ],
+  "sources": [
+    {
+      "label": "Elements of AI",
+      "url": "https://www.elementsofai.com/"
+    }
+  ],
+  "code": "Pramen: T02, § 2 (fiktivní)\nDotaz: Jaká sazba platí od 1. března 1937?\nVrať: částku, jednotku, datum účinnosti a lokátor.\nChybí-li důkaz, uveď „nedoloženo“."
+}

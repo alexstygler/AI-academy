@@ -1,0 +1,65 @@
+---
+import { Sparkles } from 'lucide-astro';
+interface Props { id: string; hint: string; check: string; example: string; }
+const { id, hint, check, example } = Astro.props;
+const endpoint = import.meta.env.PUBLIC_TUTOR_URL || '';
+if (endpoint) {
+  const parsed = new URL(endpoint);
+  if (parsed.protocol !== 'https:' || parsed.username || parsed.password) throw new Error('PUBLIC_TUTOR_URL musí být veřejná HTTPS adresa bez přihlašovacích údajů.');
+}
+---
+<section id="tutor" class="panel lesson-card" data-tutor data-id={id} data-endpoint={endpoint} data-demo={hint} data-example={example} data-check={check}>
+  <h2>Tutor k lekci</h2>
+  <p><span class="status-tag">{endpoint ? 'Živý režim pro oprávněné' : 'Ukázkový režim'}</span></p>
+  <p>{endpoint ? 'Zadej studijní otázku a svůj přístupový kód. Otázku zpracuje poskytovatel modelu.' : 'Vyzkoušej průchod s připraveným vysvětlením. Ukázka neposílá dotazy mimo web.'}</p>
+  <details>
+    <summary><Sparkles size={16} /> Vysvětli tuto lekci</summary>
+    <form method="dialog">
+      {endpoint && <p><label for="tutor-token">Přístupový kód</label><input type="password" id="tutor-token" name="token" required maxlength="160" autocomplete="off" /></p>}
+      <label for="tutor-question">Otázka k lekci</label>
+      <textarea id="tutor-question" name="question" minlength="3" maxlength="600" required rows="2" placeholder="Kterou část chceš vysvětlit?"></textarea>
+      <button class="button" type="submit">Zeptat se tutora</button>
+    </form>
+    <div class="callout" data-tutor-result aria-live="polite" hidden><p data-tutor-response></p><p data-tutor-check hidden></p><a data-tutor-passage href="#vyklad">Přejít na související pasáž</a></div>
+  </details>
+</section>
+<script>
+  import { askTutor } from '../lib/tutor-client';
+  const widget = document.querySelector<HTMLElement>('[data-tutor]');
+  if (widget) {
+    const form = widget.querySelector('form')!;
+    const result = widget.querySelector<HTMLElement>('[data-tutor-result]')!;
+    const response = widget.querySelector('[data-tutor-response]')!;
+    const check = widget.querySelector<HTMLElement>('[data-tutor-check]')!;
+    const passage = widget.querySelector<HTMLAnchorElement>('[data-tutor-passage]')!;
+    const button = form.querySelector('button')!;
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const data = new FormData(form);
+      const question = String(data.get('question') || '').trim();
+      result.hidden = false;
+      passage.hidden = true;
+      check.hidden = true;
+      if (question.length < 3) { response.textContent = 'Napiš alespoň tři znaky otázky.'; return; }
+      response.textContent = 'Připravuji vysvětlení…';
+      button.disabled = true;
+      const sample = /příklad|ukázk|praktick/i.test(question);
+      const demo = sample
+        ? { explanation: widget.dataset.example!, passage: 'priklad' as const, question: widget.dataset.check }
+        : { explanation: widget.dataset.demo!, passage: 'vyklad' as const, question: widget.dataset.check };
+      try {
+        const answer = await askTutor({ endpoint: widget.dataset.endpoint!, token: String(data.get('token') || ''), lessonId: widget.dataset.id!, question, demo });
+        response.textContent = answer.explanation;
+        check.textContent = answer.question ? 'Zkus si: ' + answer.question : '';
+        check.hidden = !answer.question;
+        passage.setAttribute('href', '#' + answer.passage);
+      } catch {
+        response.textContent = 'Živý tutor je nedostupný. Připravená nápověda: ' + demo.explanation;
+        passage.setAttribute('href', '#' + demo.passage);
+      } finally {
+        passage.hidden = false;
+        button.disabled = false;
+      }
+    });
+  }
+</script>

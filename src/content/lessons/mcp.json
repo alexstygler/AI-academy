@@ -1,0 +1,72 @@
+{
+  "version": 1,
+  "id": "mcp",
+  "week": 13,
+  "title": "Model Context Protocol",
+  "goal": "Rozliš klienta, server a druh rozhraní. Navrhni čtecí katalog lekcí.",
+  "minutes": 45,
+  "prerequisites": [
+    "citace-a-pamet"
+  ],
+  "sourceChapter": "Týden 13 · MCP a agenti",
+  "sourcePage": 28,
+  "theory": "Hostitel používá MCP klienta ke komunikaci se serverem. Server může nabídnout tools pro operace, resources pro čtení kontextových dat a prompts pro opakovatelné šablony.",
+  "detail": "Pro první pokus vystav jedinou čtecí funkci nad místním katalogem. Urči povolená pole a ověř běžný vstup, neplatné argumenty, nulový výsledek a odpojení.",
+  "example": "Nástroj najdi_lekci přijímá téma a vrací ID a titulek. Klient vybere lekci a Host rozhodne, který rozsah nabídne uživateli.",
+  "guided": "Nakresli cestu vyhledávacího dotazu od hostitele přes klienta až k serveru. U každého kroku pojmenuj předávané údaje.",
+  "independent": "Stanov nejmenší oprávnění pro vzdálený čtecí katalog a připrav test odebrání přístupu.",
+  "hint": "Seznam lekcí potřebuje jen čtení povolené kolekce. Promysli i anonymní a odpojený stav.",
+  "sample": "Platný uživatel přečte veřejná pole. Po odebrání přístupu server požadavek odmítne a klient nabídne místní index.",
+  "questions": [
+    {
+      "id": "q1",
+      "prompt": "Kdo rozhoduje o oprávnění k neveřejné lekci?",
+      "options": [
+        {
+          "text": "Textový popis nástroje sám",
+          "feedback": "Popis rozhraní pomáhá klientovi. Sám nezavádí ověření identity ani scope."
+        },
+        {
+          "text": "Implementace serveru podle identity a rozsahu",
+          "feedback": "Protokol poskytuje rozhraní. Aplikace vynucuje přístup."
+        },
+        {
+          "text": "Libovolný prompt z katalogu",
+          "feedback": "Zdrojový text je vstup. Nemůže udělit přístup k neveřejným datům."
+        }
+      ],
+      "answer": 1
+    },
+    {
+      "id": "q2",
+      "prompt": "Co je vhodné pro první MCP pokus?",
+      "options": [
+        {
+          "text": "Jeden omezený čtecí nástroj",
+          "feedback": "Úzký rozsah se dá snadno zkoušet a auditovat."
+        },
+        {
+          "text": "Publikování bez potvrzení",
+          "feedback": "Publikace potřebuje další oprávnění i potvrzení a komplikuje první ověření."
+        },
+        {
+          "text": "Přístup ke všem lokálním souborům",
+          "feedback": "Široký přístup zvyšuje množství dat a stavů ke kontrole. Katalog lekcí potřebuje pouze omezené čtení."
+        }
+      ],
+      "answer": 0
+    }
+  ],
+  "rubric": [
+    "Popsal/a jsem postup a jeho výsledek.",
+    "Výsledek jsem ověřil/a podle konkrétního podkladu nebo testu.",
+    "Uvedl/a jsem hraniční případ či nejistotu a co s ní udělám."
+  ],
+  "sources": [
+    {
+      "label": "MCP · Specifikace",
+      "url": "https://modelcontextprotocol.io/specification/"
+    }
+  ],
+  "code": null
+}

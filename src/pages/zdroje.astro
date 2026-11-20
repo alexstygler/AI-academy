@@ -1,0 +1,25 @@
+---
+import Shell from '../components/Shell.astro';
+import { url } from '../lib/course';
+const sources = [
+  ['Elements of AI', 'Kurz základů strojového učení a práce s AI. Vhodný pro první dva týdny.', 'https://www.elementsofai.com/'],
+  ['Claude Academy', 'AI fluency, jasná zadání a spolupráce s modelem.', 'https://academy.claude.com/'],
+  ['Hugging Face · Learn', 'Studijní větve pro agenty, otevřené modely, audio a počítačové vidění.', 'https://huggingface.co/learn'],
+  ['Pro Git', 'Historie změn, větve, remotes a řešení konfliktů.', 'https://git-scm.com/book/en/v2'],
+  ['Astro', 'Obsahové kolekce, statický build a podcesta GitHub Pages.', 'https://docs.astro.build/en/guides/deploy/github/'],
+  ['Model Context Protocol', 'Specifikace klienta, serveru a oprávnění.', 'https://modelcontextprotocol.io/specification/'],
+  ['arXiv · Retrieval-Augmented Generation', 'Původní výzkumný článek k vyhledání zdrojů před generováním.', 'https://arxiv.org/abs/2005.11401'],
+  ['Artificial Analysis', 'Srovnávací měření modelů. Před interpretací si otevři metodiku.', 'https://artificialanalysis.ai/'],
+  ['METR', 'Příklady měření schopností a omezení modelů v delších úlohách.', 'https://metr.org/'],
+  ['The Batch', 'Výběr témat pro redakční rešerši. Tvrzení pak dohledávej u primárních zdrojů.', 'https://www.deeplearning.ai/the-batch/'],
+];
+---
+<Shell title="Nápověda a zdroje" active="help" breadcrumb="Nápověda a zdroje">
+  <header class="page-intro"><h1>Nápověda a zdroje</h1><p>Jak akademii používat a kde si dohledat původní materiály.</p></header>
+  <div class="reading">
+    <section class="panel content-card"><h2>Jak studovat</h2><p>Začni první lekcí nebo otevři téma ze studijního plánu. Vyhraď týdně asi 90 minut na výklad, 3–4 hodiny na stavbu, 60–90 minut na měření a 30–60 minut na zdroje a poznámky.</p><p>Po úspěšném ověření se záznam zobrazí v <a href={url('pokrok')}>mém pokroku</a>. Můžeš jej stáhnout jako zálohu. Tutor má místní ukázku a jednotlivé lekce fungují bez účtu.</p></section>
+    <section class="panel content-card" id="diagnostika"><h2>Vstupní diagnostika · 45 minut</h2><ol><li>Vyber tři tvrzení z dokumentu a najdi odpovídající pasáže. Zeptej se i na jeden údaj, který pramen neobsahuje.</li><li>Načti místní JSON jednoduchým skriptem a vypiš tři záznamy. Popiš chování pro chybný vstup.</li><li>V cvičném repozitáři založ větev, uprav jednu větu, prohlédni diff a ulož commit. Vysvětli, kam patří API klíč na veřejném webu.</li></ol><p>Dej si za každou část 0 bodů při chybějícím výsledku, 1 bod s návodem a 2 body, když postup zopakuješ a vysvětlíš. Téma s nejnižším výsledkem si označ k opakování.</p></section>
+    <section class="panel content-card"><h2>Studijní příručka</h2><p><cite>AI akademie pro Alexe</cite>, rozšířené vydání 19. listopadu 2026. U každé lekce najdeš odkaz na kapitolu a stranu, z níž vychází. Fiktivní číselné údaje v dílně mají vlastní označení. Soubor příručky zůstává samostatným podkladem.</p></section>
+    <section class="panel content-card"><h2>Kurzy, dokumentace a výzkum</h2><ul class="sources-list">{sources.map(([name, description, link]) => <li><strong>{name}</strong><p>{description}</p><a class="text-link" href={link}>Otevřít zdroj ↗</a></li>)}</ul></section>
+  </div>
+</Shell>

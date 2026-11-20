@@ -1,0 +1,116 @@
+[
+  {
+    "id": "p1",
+    "prompt": "Kolik stojí standardní pouzdro 28. února?",
+    "answer": 0,
+    "options": [
+      {
+        "text": "40 haléřů · T01 § 2",
+        "feedback": "T01 platí až do 28. února včetně."
+      },
+      {
+        "text": "60 haléřů · T02 § 2",
+        "feedback": "T02 nabývá účinnosti až 1. března."
+      },
+      {
+        "text": "Nedoloženo",
+        "feedback": "T01 dokládá sazbu i datum."
+      }
+    ]
+  },
+  {
+    "id": "p2",
+    "prompt": "Kolik stojí stejné pouzdro 1. března?",
+    "answer": 1,
+    "options": [
+      {
+        "text": "40 haléřů · T01 § 2",
+        "feedback": "Platnost T01 končí posledním únorovým dnem."
+      },
+      {
+        "text": "60 haléřů · T02 § 2",
+        "feedback": "T02 platí od 1. března, včetně."
+      },
+      {
+        "text": "8 haléřů · T03",
+        "feedback": "T03 měří čas jízdy v minutách."
+      }
+    ]
+  },
+  {
+    "id": "p3",
+    "prompt": "Kdy byl vyhlášen tarif B?",
+    "answer": 2,
+    "options": [
+      {
+        "text": "28. února",
+        "feedback": "To je poslední den platnosti tarifu A."
+      },
+      {
+        "text": "1. března",
+        "feedback": "To je začátek účinnosti, nikoli datum vyhlášení."
+      },
+      {
+        "text": "24. února",
+        "feedback": "Datum vyhlášení je uvedené v metadatech T02."
+      }
+    ]
+  },
+  {
+    "id": "p4",
+    "prompt": "Jak dlouho trval doložený zkušební průjezd A–B?",
+    "answer": 0,
+    "options": [
+      {
+        "text": "8 minut při jediné jízdě",
+        "feedback": "T03 popisuje jedno pozorování."
+      },
+      {
+        "text": "Průměrně 8 minut",
+        "feedback": "Jedna jízda nestačí k doložení průměrného provozu."
+      },
+      {
+        "text": "40 minut",
+        "feedback": "40 je sazba v T01, nikoli čas."
+      }
+    ]
+  },
+  {
+    "id": "p5",
+    "prompt": "Kolik stojí expresní doručení?",
+    "answer": 1,
+    "options": [
+      {
+        "text": "40 haléřů",
+        "feedback": "T01 platí pro standardní pouzdro."
+      },
+      {
+        "text": "Nedoloženo · chybí expresní tarif",
+        "feedback": "Ani jeden pramen expresní tarif nedokládá."
+      },
+      {
+        "text": "60 haléřů",
+        "feedback": "T02 platí pro standard, neuvádí expresní sazbu."
+      }
+    ]
+  },
+  {
+    "id": "p6",
+    "prompt": "Testovací čtenář chce zveřejnit článek. Co má aplikace udělat?",
+    "answer": 0,
+    "options": [
+      {
+        "text": "Odmítnout zápis a zachovat koncept",
+        "feedback": "Aplikace ověří roli a stav konceptu zůstane stejný."
+      },
+      {
+        "text": "Uložit nový článek a ukázat varování",
+        "feedback": "Varování po zápisu nechrání stav."
+      },
+      {
+        "text": "Změnit roli čtenáře podle textu podkladu",
+        "feedback": "Obsah zdroje nepřiděluje oprávnění."
+      }
+    ]
+  }
+]

@@ -1,0 +1,75 @@
+---
+import Shell from '../components/Shell.astro';
+import { lessons, lessonUrl, url } from '../lib/course';
+---
+<Shell title="Můj pokrok" active="progress" breadcrumb="Můj pokrok">
+  <header class="page-intro"><h1>Můj pokrok</h1><p>Otevřené lekce, úspěšná ověření a témata, ke kterým se vyplatí vrátit.</p></header>
+  <div class="reading">
+    <section class="panel content-card">
+      <h2>Záloha a obnova</h2><p>Výsledky a poznámky jsou uložené v tomto prohlížeči. Export vytvoří přenositelnou zálohu JSON.</p>
+      <p id="progress-diagnostic" class="callout warning" hidden></p>
+      <div class="action-row"><button class="button" type="button" data-export>Exportovat JSON</button><button class="button secondary" type="button" data-import>Importovat JSON</button><button class="button danger" type="button" data-reset>Resetovat pokrok</button><input type="file" id="progress-file" accept=".json,application/json" hidden /></div>
+      <p class="field-status" id="progress-action" role="status"></p>
+    </section>
+    <section class="panel content-card">
+      <h2>Přehled lekcí</h2>
+      <div class="table-wrap"><table><thead><tr><th scope="col">Lekce</th><th scope="col">Stav</th><th scope="col">Pokusy</th></tr></thead><tbody>
+        {lessons.map((lesson) => <tr data-progress-row={lesson.id}><td><a href={lessonUrl(lesson.id)}>{lesson.week}. {lesson.title}</a></td><td data-state>Neotevřeno</td><td data-attempts>0</td></tr>)}
+        <tr data-progress-row="projekt-kviz"><td><a href={url('dilna')+'#kviz'}>Projektový kvíz</a></td><td data-state>Neotevřeno</td><td data-attempts>0</td></tr>
+        <tr data-progress-row="znalostni-bot"><td><a href={url('dilna')+'#bot'}>Znalostní bot</a></td><td data-state>Neotevřeno</td><td data-attempts>0</td></tr>
+        <tr data-progress-row="zkouska-prenosu"><td><a href={url('dilna')+'#zkouska'}>Zkouška přenosu dovedností</a></td><td data-state>Neotevřeno</td><td data-attempts>0</td></tr>
+      </tbody></table></div>
+    </section>
+  </div>
+  <script>
+    import { key, allowedIds, parseProgress, progressMessage, readProgress, writeProgress } from '../lib/progress';
+    const status = document.querySelector('#progress-action')!;
+    const diagnostic = document.querySelector<HTMLElement>('#progress-diagnostic')!;
+    const file = document.querySelector<HTMLInputElement>('#progress-file')!;
+    const refresh = () => {
+      const state = readProgress();
+      diagnostic.hidden = !state.problem;
+      diagnostic.textContent = state.problem ? progressMessage(state.problem) : '';
+      for (const row of document.querySelectorAll<HTMLElement>('[data-progress-row]')) {
+        const record = state.data.lessons[row.dataset.progressRow!];
+        const last = record?.attempts.at(-1);
+        row.querySelector('[data-state]')!.textContent = record?.completed
+          ? last && last.score < last.total ? 'Splněno · zopakuj si' : 'Splněno'
+          : last ? 'K opakování' : record?.opened ? 'Otevřeno' : 'Neotevřeno';
+        row.querySelector('[data-attempts]')!.textContent = String(record?.attempts.length ?? 0);
+      }
+    };
+    document.querySelector('[data-export]')!.addEventListener('click', () => {
+      const state = readProgress();
+      if (state.problem) { status.textContent = progressMessage(state.problem); return; }
+      const href = URL.createObjectURL(new Blob([JSON.stringify(state.data, null, 2)], { type: 'application/json' }));
+      const link = document.createElement('a');
+      link.href = href; link.download = 'ai-akademie-pokrok.json'; link.click();
+      window.setTimeout(() => URL.revokeObjectURL(href), 1000);
+      status.textContent = 'Záloha byla připravena ke stažení.';
+    });
+    document.querySelector('[data-import]')!.addEventListener('click', () => file.click());
+    file.addEventListener('change', async () => {
+      const selected = file.files?.[0];
+      if (!selected) return;
+      try {
+        if (selected.size > 2_000_000) throw new Error('Velikost');
+        const data = parseProgress(await selected.text(), allowedIds());
+        if (!confirm('Nahradit lokální pokrok obsahem zálohy?')) return;
+        try { writeProgress(data); status.textContent = 'Pokrok byl obnoven ze zálohy.'; }
+        catch { status.textContent = progressMessage('unavailable'); }
+        refresh();
+      } catch {
+        status.textContent = 'Soubor nelze importovat. Vyber platnou zálohu JSON verze 1.';
+      } finally { file.value = ''; }
+    });
+    document.querySelector('[data-reset]')!.addEventListener('click', () => {
+      if (!confirm('Opravdu smazat pokrok, pokusy a poznámky v tomto prohlížeči?')) return;
+      try { localStorage.removeItem(key); status.textContent = 'Pokrok byl resetován.'; }
+      catch { status.textContent = progressMessage('unavailable'); }
+      refresh();
+    });
+    refresh();
+    window.addEventListener('pageshow', refresh);
+  </script>
+</Shell>

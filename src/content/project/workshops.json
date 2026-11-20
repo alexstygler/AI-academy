@@ -1,0 +1,55 @@
+{
+  "version": 1,
+  "labs": [
+    {
+      "id": "historicka-reserse", "title": "Vlastní rešeršní skill", "week": 7, "page": 31,
+      "goal": "Zabal ověřování historického tvrzení do opakovatelných instrukcí.",
+      "steps": ["Do složky historicka-reserse napiš SKILL.md s názvem, situací použití a kroky.", "Zaveď pole tvrzení, pasáž, platnost a stav. Při chybějícím dokladu uveď, co sháníš.", "Ověř tři rešeršní úkoly, dvě situace mimo rozsah a neplatné datum 31. února."],
+      "solo": "Přenes šablonu do druhého asistenta a zkontroluj shodu polí a použití.",
+      "sample": "Doložený tarif obsahuje T02 § 2 a platnost od 1. března. Tvůrčí pojmenování hostince skill nespouští. Neplatné datum zastaví hledání."
+    },
+    {
+      "id": "api-bot", "title": "První API bot v Pythonu", "week": 9, "page": 32,
+      "goal": "Postav terminálového tutora a zvládni chybu poskytovatele.",
+      "steps": ["Vytvoř venv a přidej oficiální SDK. Pro první pokus použij lokální funkci se stejným rozhraním.", "Čti serverový klíč z prostředí. Omez délku vstupu, čekání a počet výstupních tokenů.", "Ověř běžný dotaz, prázdný vstup, příliš dlouhou otázku a chybu služby."],
+      "solo": "Nahraď simulátor schváleným modelem až po nastavení rozpočtu. Uchovej typ chyby a čas, bez klíče a soukromé otázky.",
+      "sample": "Prázdný vstup skončí lokálně. Platná otázka dostane krátkou odpověď s pasáží. Při timeoutu se zobrazí místní nápověda."
+    },
+    {
+      "id": "znalostni-rag", "title": "Znalostní bot s ověřitelnou odpovědí", "week": 11, "page": 33,
+      "goal": "Odděl kvalitu vyhledávání od kvality generované odpovědi.",
+      "steps": ["Načti dokumenty a zachovej jejich ID, lokalizaci a platnost.", "Na 24 případech porovnej žádné dohledání, fulltext a volitelně vektorové nebo hybridní hledání. Šest případů vyhraď pro závěr.", "Sleduj recall@5, podíl podložených odpovědí, správně přiznané mezery, čas a cenu."],
+      "solo": "Vytvoř parafrázi s nejasným datem. Porovnej, co vyhledávání našlo a co odpověď skutečně citovala.",
+      "sample": "Fulltext je měřitelný základ. Opravu indexu vyzkouším, když úsek chybí. Při nesprávném použití nalezeného úseku ověřím generátor a validaci."
+    },
+    {
+      "id": "n8n-redakce", "title": "Pondělní sběr zpráv v n8n", "week": 8, "page": 34,
+      "goal": "Připrav jeden návrh se zdroji i při výpadku části vstupů.",
+      "steps": ["Připoj ruční trigger, lokální data a RSS Read. Sjednoť title, url, published_at a source_id.", "Filtruj uzavřený pražský týden, deduplikuj kanonické odkazy a ulož podle ID týdne.", "Přidej plán na pondělí 07:15 a lidskou revizi mimo automatický běh."],
+      "solo": "Spusť běh v pondělí i o den později. Simuluj chybu zdroje a odkaz bez známého ID.",
+      "sample": "ID týdne je shodné, chybu zdroje vidí redaktor a koncept čeká na ověření."
+    },
+    {
+      "id": "dva-agenti", "title": "Jeden úkol, dva agenti", "week": 6, "page": 16,
+      "goal": "Porovnej Codex a Claude Code na stejném commitu.",
+      "steps": ["Připrav stejné výchozí soubory pro dvě větve v cvičném projektu.", "Zadej filtr lekcí podle týdne, viditelný prázdný stav a možnost filtr zrušit.", "Ověř platný a neplatný týden, přímý odkaz, klávesnici a změněné soubory."],
+      "solo": "Skryj jeden hraniční případ z implementačního zadání a použij jej při nezávislé přejímce.",
+      "sample": "Srovnám kvalitu filtru, úplnost testů, potřebné ruční opravy a velikost diffu."
+    },
+    {
+      "id": "dve-api", "title": "Stejný dotaz přes Claude a Gemini", "week": 10, "page": 21,
+      "goal": "Porovnej dvě API nad totožnou otázkou a podkladem.",
+      "steps": ["Připrav stejný cvičný úryvek, prompt, výstupní limit a tři vstupy. Zapiš přesný model a čas.", "V adaptéru Claude Messages i Gemini generateContent drž klíče na serveru. Začni s lokální simulací obou odpovědí.", "Porovnej tvar dat, citaci, latenci a účtování. Ověř stav bez důkazu."],
+      "solo": "Přidej neplatné ID a omluvu místo JSON. Obě chyby zpracuj srozumitelně pro klienta.",
+      "sample": "Stejné schéma ověřím u obou výstupů a citaci zkontroluji podle pramene. Nedostupnost poskytovatele vede k místní nápovědě."
+    }
+  ],
+  "transfer": [
+    { "question": "Jak zpracuješ měsíční součet ve stále doplňované tabulce domácích výdajů?", "sample": "Součet dělá funkce nebo skript nad známými jednotkami. Model pomůže navrhnout postup. Ověř nulu, prázdnou hodnotu i duplicitu." },
+    { "question": "Bot má z rozdílných tarifů doložit stav k 1. březnu 1937. Jak?", "sample": "Vyhledej pasáž s odpovídající dobou platnosti. Vrať T02 § 2. Neznámé období znamená upřesnění nebo popis mezery." },
+    { "question": "Jak rozdělíš opakovatelnou rešerši, čtení katalogu a pondělní spuštění?", "sample": "Skill definuje postup, čtecí funkce nebo MCP poskytne katalog, trigger zajistí plán. Vypnutý katalog musí vrátit řízený stav." },
+    { "question": "Model se na žebříčku zlepšil o dva body. Jak vybereš variantu pro český přehled?", "sample": "Použij vlastní sadu s kontrolou citací, stejným kontextem a limitem. Vyhodnoť kvalitu, náklady a latenci i nad nejasným vstupem." },
+    { "question": "Čtená webová stránka žádá publikaci. Co rozhoduje o změně stavu?", "sample": "Server ověří identitu, oprávnění, aktuální verzi a lidské potvrzení. Ověř, že samotné čtení stav nezmění." },
+    { "question": "Po timeoutu se návrh připraví znovu. Jak zabráníš duplicitám?", "sample": "Použij stabilní klíč týdne, omezený retry a společný revizní stav. Simuluj ztrátu potvrzení po úspěšném zápisu." }
+  ]
+}

@@ -1,0 +1,11 @@
+[Unit]
+Description=Pondelni navrh AI akademie
+
+[Timer]
+OnCalendar=Mon *-*-* 07:15:00 Europe/Prague
+AccuracySec=1s
+Persistent=true
+Unit=akademie-editorial.service
+
+[Install]
+WantedBy=timers.target

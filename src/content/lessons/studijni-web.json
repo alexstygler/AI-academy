@@ -1,0 +1,72 @@
+{
+  "version": 1,
+  "id": "studijni-web",
+  "week": 17,
+  "title": "Obsah a studijní web",
+  "goal": "Postav statický studijní průchod s validovaným obsahem a obnovitelným pokrokem.",
+  "minutes": 40,
+  "prerequisites": [
+    "provoz"
+  ],
+  "sourceChapter": "Týden 17 · Dokončení vlastního webu",
+  "sourcePage": 30,
+  "theory": "Obsah lekce ukládej pod stabilním ID. Schéma vyžaduje cíl, čas, zdroje a kontrolní otázky. Statický build sestaví stránky z verzovaných podkladů a funguje bez serveru modelu.",
+  "detail": "Lokální pokrok rozlišuje návštěvu, poslední pokus a dokončené ověření. Export má verzi, import ověřuje celý tvar před přepsáním a reset potřebuje potvrzení.",
+  "example": "Otevřu lekci na telefonu, vyřeším kvíz, obnovím stránku a na přehledu vidím změnu. Poškozená data vyvolají návod k obnově.",
+  "guided": "Přidej novou lekci podle schématu, spusť kontrolu a zkus vynechat povinný odkaz. Sleduj chybovou zprávu.",
+  "independent": "Navrhni migraci lokálního pokroku po změně formátu a zkus import neznámé verze bez přepsání současného stavu.",
+  "hint": "Stabilní ID je spojení záznamu s lekcí. Verze určuje, jak číst strukturu.",
+  "sample": "Nejdřív validuji vstup a případně migruji známou starou verzi. Neznámou odmítnu, současná data zůstávají.",
+  "questions": [
+    {
+      "id": "q1",
+      "prompt": "Kdy se lekce počítá jako ověřená?",
+      "options": [
+        {
+          "text": "Po otevření stránky",
+          "feedback": "Návštěva znamená pouze otevření obsahu."
+        },
+        {
+          "text": "Po zobrazení vzoru",
+          "feedback": "Zobrazení modelového řešení neprokazuje dovednost."
+        },
+        {
+          "text": "Po úspěšné kontrole cíle",
+          "feedback": "Návštěva a ověření jsou různé události."
+        }
+      ],
+      "answer": 2
+    },
+    {
+      "id": "q2",
+      "prompt": "Co uděláš před importem?",
+      "options": [
+        {
+          "text": "Smažu všechna současná data",
+          "feedback": "Neplatná záloha by po smazání původního stavu znamenala ztrátu dat."
+        },
+        {
+          "text": "Ověřím formát, verzi a hodnoty",
+          "feedback": "Poškozený import nesmí přepsat funkční stav."
+        },
+        {
+          "text": "Změním ID všech lekcí",
+          "feedback": "Stabilní ID jsou nutná k přiřazení uložených pokusů ke správné lekci."
+        }
+      ],
+      "answer": 1
+    }
+  ],
+  "rubric": [
+    "Popsal/a jsem postup a jeho výsledek.",
+    "Výsledek jsem ověřil/a podle konkrétního podkladu nebo testu.",
+    "Uvedl/a jsem hraniční případ či nejistotu a co s ní udělám."
+  ],
+  "sources": [
+    {
+      "label": "Astro · Content Collections",
+      "url": "https://docs.astro.build/en/guides/content-collections/"
+    }
+  ],
+  "code": "npm run check\nnpm test\nnpm run build"
+}

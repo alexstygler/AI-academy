@@ -1,0 +1,72 @@
+{
+  "version": 1,
+  "id": "git-a-technicke-minimum",
+  "week": 5,
+  "title": "Git a technické minimum",
+  "goal": "Proveď malou vratnou změnu a vysvětli rozdíl mezi pracovním stromem a commitem.",
+  "minutes": 35,
+  "prerequisites": [
+    "tabulky-a-multimodalita"
+  ],
+  "sourceChapter": "Týden 5 · Programování s AI",
+  "sourcePage": 24,
+  "theory": "Pracovní strom jsou aktuální soubory, index vybírá obsah dalšího commitu a commit ukládá snímek. Větev je ukazatel na commit. Remote označuje vzdálený repozitář.",
+  "detail": "Než začneš, zkontroluj stav. Před commitem prohlédni diff i staged diff a spusť kontrolu. API klíče drž mimo Git a klientský build.",
+  "example": "V cvičném repozitáři uprav jen úvod lekce. Spusť git status, git diff a po git add ještě git diff --cached.",
+  "guided": "Vytvoř větev cviceni-text, změň jednu větu ve vlastním souboru, porovnej diff a popiš, co má commit obsahovat.",
+  "independent": "V další větvi změň jeden odkaz. Ověř změnu a připrav nový commit, který ji bezpečně vrátí.",
+  "hint": "Při společné historii zvaž vratný commit pomocí git revert.",
+  "sample": "Změnu zaznamenám v malém commitu a později vrátím samostatným revertem. Druhý diff musí odpovídat původnímu obsahu.",
+  "questions": [
+    {
+      "id": "q1",
+      "prompt": "Jak prohlédneš obsah připravený k commitu?",
+      "options": [
+        {
+          "text": "git diff --cached",
+          "feedback": "Staged diff ukazuje přesné změny mezi indexem a HEAD."
+        },
+        {
+          "text": "git log --all",
+          "feedback": "git log čte historii už vytvořených commitů. Připravené soubory jsou v indexu."
+        },
+        {
+          "text": "git status --short zobrazí celé řádky změny",
+          "feedback": "Krátký status uvádí názvy a stavy souborů. Přesné změny ukáže staged diff."
+        }
+      ],
+      "answer": 0
+    },
+    {
+      "id": "q2",
+      "prompt": "Kam patří klíč placeného API?",
+      "options": [
+        {
+          "text": "Do veřejného JSON",
+          "feedback": "Veřejný JSON může návštěvník stáhnout přímo."
+        },
+        {
+          "text": "Do přibaleného JavaScriptu",
+          "feedback": "JavaScript z webu je prohlížeči viditelný jako statický soubor."
+        },
+        {
+          "text": "Do proměnné na serveru",
+          "feedback": "Statické soubory si může přečíst každý návštěvník."
+        }
+      ],
+      "answer": 2
+    }
+  ],
+  "rubric": [
+    "Popsal/a jsem postup a jeho výsledek.",
+    "Výsledek jsem ověřil/a podle konkrétního podkladu nebo testu.",
+    "Uvedl/a jsem hraniční případ či nejistotu a co s ní udělám."
+  ],
+  "sources": [
+    {
+      "label": "Pro Git",
+      "url": "https://git-scm.com/book/en/v2"
+    }
+  ],
+  "code": "git status\ngit diff\ngit diff --cached"
+}

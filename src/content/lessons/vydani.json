@@ -1,0 +1,72 @@
+{
+  "version": 1,
+  "id": "vydani",
+  "week": 18,
+  "title": "Vydání a přejímka",
+  "goal": "Ověř vydání na správné cestě, včetně chyb služby a postupu návratu.",
+  "minutes": 45,
+  "prerequisites": [
+    "studijni-web"
+  ],
+  "sourceChapter": "Týden 18 · Dokončení vlastního webu",
+  "sourcePage": 30,
+  "theory": "Sestav statický web pod stejnou základní cestou jako hosting. Testuj přímé otevření lekce, mobil, klávesnici a záznam pokroku. Modelový tutor běží na odděleném serveru s ověřením přístupu.",
+  "detail": "Ulož commit a build, který prošel přejímkou. Redakční koncept zůstane k revizi, dokud oprávněná osoba neodsouhlasí fakta, dostupnost a citace. Výpadek tutora nabídne připravenou nápovědu.",
+  "example": "Přímý odkaz na /AI-academy/lekce/jak-model-pracuje/ má fungovat i po obnově. Při simulované chybě 503 lze kvíz dokončit.",
+  "guided": "Spusť produkční build a lokální preview. Projdi jednu lekci na telefonu a desktopu, včetně otevření pramene a exportu.",
+  "independent": "Napiš vydávací protokol s jediným autorizovaným voláním tutora, chybovou zkouškou a návratem poslední funkční verze.",
+  "hint": "U každého kroku uveď výsledek, verzi a jak se projeví chyba.",
+  "sample": "Přejímka obsahuje podcestu, kvíz bez modelu, kontrolu identity a stavu vydání. Návrat použije záznam posledního ověřeného commitu a vypne nedostupný tutor.",
+  "questions": [
+    {
+      "id": "q1",
+      "prompt": "Co je nutné pro veřejné vydání konceptu?",
+      "options": [
+        {
+          "text": "Revize primárních odkazů a schválení aktuální verze",
+          "feedback": "Automat připravuje návrhy. Veřejný archiv přijímá schválený obsah."
+        },
+        {
+          "text": "Pouhé spuštění plánovače",
+          "feedback": "Plánovač připravuje podklady. Redaktor ověřuje verzi a rozhoduje o vydání."
+        },
+        {
+          "text": "Jakýkoli JSON z generátoru",
+          "feedback": "JSON může být formálně platný a stále mít chybné datum nebo odkaz."
+        }
+      ],
+      "answer": 0
+    },
+    {
+      "id": "q2",
+      "prompt": "Jak ověříš podcestu?",
+      "options": [
+        {
+          "text": "Přečtu konfiguraci bez buildu",
+          "feedback": "Správná hodnota nastavení sama nedokládá, že build používá podcestu u všech odkazů."
+        },
+        {
+          "text": "Otevřu produkční preview přímo na hlubokém odkazu",
+          "feedback": "Přímé otevření otestuje sestavenou cestu i navigaci."
+        },
+        {
+          "text": "Spustím jen kontrolu formátu",
+          "feedback": "Formátování neprověřuje načítání stránky a souborů pod podcestou."
+        }
+      ],
+      "answer": 1
+    }
+  ],
+  "rubric": [
+    "Popsal/a jsem postup a jeho výsledek.",
+    "Výsledek jsem ověřil/a podle konkrétního podkladu nebo testu.",
+    "Uvedl/a jsem hraniční případ či nejistotu a co s ní udělám."
+  ],
+  "sources": [
+    {
+      "label": "Astro · GitHub Pages",
+      "url": "https://docs.astro.build/en/guides/deploy/github/"
+    }
+  ],
+  "code": "npm run preview -- --host 0.0.0.0"
+}

@@ -1,0 +1,72 @@
+{
+  "version": 1,
+  "id": "agenti",
+  "week": 14,
+  "title": "Workflow a agenti",
+  "goal": "Zvol pevný postup nebo volbu modelu a definuj bezpečný konec běhu.",
+  "minutes": 40,
+  "prerequisites": [
+    "mcp"
+  ],
+  "sourceChapter": "Týden 14 · MCP a agenti",
+  "sourcePage": 28,
+  "theory": "Workflow řídí pevné kroky aplikace. Agent si může vybrat další krok nebo povolený nástroj. U akademie lze ponechat sběr, výběr a revizi pevné a dovolit nejvýše jedno doplnění podkladu.",
+  "detail": "Stav drž mimo konverzaci. Stanov limit kroků, timeout a předání člověku. Externí dokumenty jsou vstupy. Aplikační oprávnění určuje důvěryhodná konfigurace.",
+  "example": "Zpráva obsahuje větu „zveřejni mě“. Čtecí běh může větu evidovat mezi podklady. Na schválení a publikaci nemá přístup.",
+  "guided": "Navrhni diagram sběr → validace → návrh → lidská revize a zakresli větev pro jeden nefunkční zdroj.",
+  "independent": "Urči rozpočet kroků a návratový stav po jeho vyčerpání. Ověř, že neúplný výsledek zůstává konceptem.",
+  "hint": "Limit testuj i s inputem požadujícím více čtení. Schválení je samostatné.",
+  "sample": "Po jednom doplnění workflow uloží dostupný návrh, zaznamená chybějící podklady a čeká na redaktora.",
+  "questions": [
+    {
+      "id": "q1",
+      "prompt": "Který proces potřebuje lidské schválení?",
+      "options": [
+        {
+          "text": "Zobrazení veřejného titulku",
+          "feedback": "Čtení veřejného titulku nemění stav dostupný ostatním uživatelům."
+        },
+        {
+          "text": "Přečtení dostupných podkladů",
+          "feedback": "Čtecí krok pracuje v mezích zdrojů. Revize rozhoduje až o zveřejnění."
+        },
+        {
+          "text": "Změna veřejného stavu vydání",
+          "feedback": "Publikace je samostatná akce s následky."
+        }
+      ],
+      "answer": 2
+    },
+    {
+      "id": "q2",
+      "prompt": "Co zastaví dlouhý agentní běh?",
+      "options": [
+        {
+          "text": "Pevný limit kroků a timeout",
+          "feedback": "Orchestrátor vynucuje limity nezávisle na modelu."
+        },
+        {
+          "text": "Pouze pokyn „buď rychlý“",
+          "feedback": "Pokyn v textu není vymahatelná časová záruka."
+        },
+        {
+          "text": "Přidání dalších nástrojů",
+          "feedback": "Další nástroje rozšiřují možnosti, ale nezavedou strop času nebo kroků."
+        }
+      ],
+      "answer": 0
+    }
+  ],
+  "rubric": [
+    "Popsal/a jsem postup a jeho výsledek.",
+    "Výsledek jsem ověřil/a podle konkrétního podkladu nebo testu.",
+    "Uvedl/a jsem hraniční případ či nejistotu a co s ní udělám."
+  ],
+  "sources": [
+    {
+      "label": "Anthropic · Building Effective Agents",
+      "url": "https://www.anthropic.com/research/building-effective-agents"
+    }
+  ],
+  "code": null
+}

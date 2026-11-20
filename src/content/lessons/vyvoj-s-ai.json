@@ -1,0 +1,72 @@
+{
+  "version": 1,
+  "id": "vyvoj-s-ai",
+  "week": 6,
+  "title": "Vývoj s Codexem a Claude Code",
+  "goal": "Rozděl vývojový úkol na malou změnu s nezávislou přejímkou.",
+  "minutes": 40,
+  "prerequisites": [
+    "git-a-technicke-minimum"
+  ],
+  "sourceChapter": "Týden 6 · Programování s AI",
+  "sourcePage": 24,
+  "theory": "Zadání pro programátorského asistenta popíše uživatelskou akci, změnu na obrazovce, okraje a příkaz ověření. Po zmapování projektu nech nástroj upravit jeden konkrétní celek a zkontroluj diff.",
+  "detail": "V Codexu a Claude Code používej stejný výchozí commit. Kontrolní případy, které sám následně spustíš, nech pro nezávislou přejímku.",
+  "example": "Pro filtr týdnů vyzkoušej platný týden, prázdný výsledek, neplatnou hodnotu z URL, přímý odkaz i ovládání klávesnicí.",
+  "guided": "Na dvou větvích zadej stejný filtr. Porovnej rozsah diffu, spuštěné testy a ručně ověřené chování.",
+  "independent": "Specifikuj samostatnou funkci pro uložení pokroku a navrhni regresní test pro obnovení stránky a poškozené úložiště.",
+  "hint": "Popiš chování před a po obnově včetně viditelného výsledku.",
+  "sample": "Po správném odevzdání se objeví vysvětlení a stav Splněno. Po obnově stav zůstane. U neplatného úložiště se zobrazí možnost obnovy.",
+  "questions": [
+    {
+      "id": "q1",
+      "prompt": "Co prokazuje funkční filtr?",
+      "options": [
+        {
+          "text": "Plynulé shrnutí asistenta",
+          "feedback": "Shrnutí popisuje záměr. Otestuj skutečné chování filtru."
+        },
+        {
+          "text": "Počet nových souborů",
+          "feedback": "Počet souborů neměří správnost výsledků ani okrajových stavů."
+        },
+        {
+          "text": "Ověření běžného, prázdného a neplatného vstupu",
+          "feedback": "Přejímka měří chování, které uživatel skutečně uvidí."
+        }
+      ],
+      "answer": 2
+    },
+    {
+      "id": "q2",
+      "prompt": "Jak porovnáš dva asistenty?",
+      "options": [
+        {
+          "text": "Každému dám jinou verzi projektu",
+          "feedback": "Různé verze mohou obsahovat odlišné překážky nebo předchozí práci."
+        },
+        {
+          "text": "Použiji stejný commit, zadání a měření",
+          "feedback": "Stejné podmínky umožní porovnat výsledek i potřebné opravy."
+        },
+        {
+          "text": "Změřím jen čas jejich odpovědi",
+          "feedback": "Čas bez funkčnosti a ručních oprav nepokrývá kvalitu dodané změny."
+        }
+      ],
+      "answer": 1
+    }
+  ],
+  "rubric": [
+    "Popsal/a jsem postup a jeho výsledek.",
+    "Výsledek jsem ověřil/a podle konkrétního podkladu nebo testu.",
+    "Uvedl/a jsem hraniční případ či nejistotu a co s ní udělám."
+  ],
+  "sources": [
+    {
+      "label": "OpenAI · Codex",
+      "url": "https://developers.openai.com/codex/"
+    }
+  ],
+  "code": null
+}

@@ -1,0 +1,72 @@
+{
+  "version": 1,
+  "id": "api-a-json",
+  "week": 9,
+  "title": "API a strukturované výstupy",
+  "goal": "Navrhni omezené volání modelu a validuj data proti schématu i zdrojům.",
+  "minutes": 45,
+  "prerequisites": [
+    "automatizace"
+  ],
+  "sourceChapter": "Týden 9 · Vlastní bot a volání funkcí",
+  "sourcePage": 26,
+  "theory": "API přijímá HTTP požadavky. SDK ulehčí komunikaci. Na serveru nastav klíč, model, timeout, limit výstupu a reakci na chyby. Rozliš 401 (ověření), 429 (omezení nebo kvóta) a 5xx (chyba služby).",
+  "detail": "Schéma JSON ověřuje typy a povinná pole. Aplikace navíc ověřuje, že odkazované zdroje existují a patří do vybraného období. Počítej s odmítnutím a neúplnou odpovědí.",
+  "example": "Výsledek { „shrnutí“: „…“, „zdroje“: [„T99“] } může splnit schéma. V korpusu T01–T03 ale není T99, proto vyžaduje opravu.",
+  "guided": "Zapiš tři vstupy: validní výsledek s T02, neznámé ID i vypnutou službu. U každého stanov výsledek validace.",
+  "independent": "Napiš kontrakt pro krátkého tutora se zdrojem z lekce a kontrolní otázkou. Přidej omezení délky.",
+  "hint": "Použij zvlášť formální validaci a ověření seznamu povolených ID.",
+  "sample": "Zobrazím jen validní výstup se známým ID pasáže. Po timeoutu nabídnu místní nápovědu. Klíč čte server.",
+  "questions": [
+    {
+      "id": "q1",
+      "prompt": "Co ještě ověříš po úspěšné validaci JSON?",
+      "options": [
+        {
+          "text": "Zda citované ID existuje v povolených podkladech",
+          "feedback": "Tvar dat nedokládá pravdivost ani oprávnění."
+        },
+        {
+          "text": "Zda má JSON dost odsazení",
+          "feedback": "Odsazení je formátování. Validita zdrojového ID je kontrola významu."
+        },
+        {
+          "text": "Zda už není nutné kontrolovat obsah",
+          "feedback": "Schéma ověřuje typy a pole. Odkazy a data mají samostatná pravidla."
+        }
+      ],
+      "answer": 0
+    },
+    {
+      "id": "q2",
+      "prompt": "Co uděláš při chybě 401?",
+      "options": [
+        {
+          "text": "Budu opakovat požadavek bez limitu",
+          "feedback": "Neomezené opakování nepomůže, dokud se neopraví ověření nebo oprávnění."
+        },
+        {
+          "text": "Prověřím oprávnění a konfiguraci",
+          "feedback": "401 míří na ověření přístupu."
+        },
+        {
+          "text": "Zvětším limit výstupu",
+          "feedback": "Velikost výstupu nezmění platnost přístupu."
+        }
+      ],
+      "answer": 1
+    }
+  ],
+  "rubric": [
+    "Popsal/a jsem postup a jeho výsledek.",
+    "Výsledek jsem ověřil/a podle konkrétního podkladu nebo testu.",
+    "Uvedl/a jsem hraniční případ či nejistotu a co s ní udělám."
+  ],
+  "sources": [
+    {
+      "label": "OpenAI · Structured Outputs",
+      "url": "https://platform.openai.com/docs/guides/structured-outputs"
+    }
+  ],
+  "code": null
+}

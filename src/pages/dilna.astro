@@ -1,0 +1,104 @@
+---
+import Shell from '../components/Shell.astro';
+import Notebook from '../components/Notebook.astro';
+import Quiz from '../components/Quiz.astro';
+import { url } from '../lib/course';
+import corpus from '../content/project/corpus.json';
+import questions from '../content/project/quiz.json';
+import evaluations from '../content/project/evaluations.json';
+import { workshop } from '../lib/catalog';
+---
+<Shell title="Projektová dílna" active="workshop" breadcrumb="Projektová dílna">
+  <header class="page-intro"><p class="eyebrow">PRŮCHOZÍ PROJEKT</p><h1>Potrubní pošta</h1><p>Začni pěti otázkami nad prameny. Postav kvíz, sadu ověření a bota s citacemi. Nakonec vydej vlastní aplikaci.</p>
+    <nav class="tag-list" aria-label="Obsah dílny">{[['prameny','Prameny'],['kviz','Kvíz'],['bot','Bot'],['praktika','Praktika'],['zkouska','Zkouška']].map(([id,label]) => <a class="button secondary" href={'#'+id}>{label}</a>)}</nav>
+  </header>
+  <div class="reading">
+    <section class="panel content-card">
+      <h2>Od otázky k vydání</h2>
+      <ol><li><strong>Týdny 1–4.</strong> Připrav prameny, pět otázek a ruční doklady k odpovědím.</li><li><strong>Týdny 5–8.</strong> Ulož kvíz do Gitu, zkontroluj pokrok po obnovení a připrav rešeršní skill i pondělní návrh.</li><li><strong>Týdny 9–12.</strong> Navrhni schéma bota s ID pramene a otestuj relevanci dohledaného úseku.</li><li><strong>Týdny 13–16.</strong> Zakryj chyby regresními případy a ověř roli, časový limit i soukromí.</li><li><strong>Týdny 17–18.</strong> Ověř build, prohlížeč, nezávislý tutor a ruční schválení návrhu.</li></ol>
+    </section>
+    <section class="panel content-card" id="prameny">
+      <h2>Cvičné prameny</h2><p class="callout warning"><strong>Fikce.</strong> Údaje jsou smyšlené a slouží výuce práce s prameny.</p>
+      <div class="source-grid">{corpus.documents.map((doc) => <article class="source-doc" id={doc.id}><p class="eyebrow">{doc.id} · {doc.locator}</p><h3>{doc.title}</h3><p>{doc.text}</p><small>{doc.validity}</small></article>)}</div>
+      <form id="source-search"><label for="source-query"><strong>Prohledat prameny</strong></label><div class="action-row"><input type="search" id="source-query" class="filter-input" required maxlength="120" placeholder="Např. tarif, T02 nebo osm minut" /><button class="button secondary">Hledat</button></div><p id="source-results" role="status" class="field-status"></p></form>
+    </section>
+    <section class="panel content-card" id="kviz">
+      <h2>Pět otázek nad prameny</h2><p class="callout warning">Fiktivní údaje. Rozliš den vyhlášení, období účinnosti a chybějící důkaz.</p>
+      <Quiz id="projekt-kviz" questions={questions.slice(0,5)} />
+      <details><summary>Samostatná varianta s T04</summary><p>Vytvoř fiktivní T04 se sazbou 90 haléřů jen pro jednu trasu od 10. března. Připrav dotaz na tuto trasu, na běžnou trasu a dotaz bez trasy. Zapiš očekávaná ID pramenů.</p><details><summary>Zobrazit vzor</summary><p>90 haléřů doloží T04 jen pro danou trasu. T02 dál dokládá 60 pro běžnou trasu. Bez trasy se bot doptá nebo vysvětlí obě možnosti.</p></details></details>
+    </section>
+    <section class="panel content-card" id="bot">
+      <h2>Znalostní bot s citacemi</h2><p>Lokální simulace kombinuje volbu otázky a ověření platnosti. Ke každé odpovědi zobrazuje důkaz, jeho omezení nebo chybějící podklad.</p>
+      <form id="post-bot">
+        <label for="post-intent"><strong>Otázka</strong></label>
+        <select id="post-intent" name="intent"><option value="price">Cena standardního pouzdra</option><option value="published">Vyhlášení tarifu B</option><option value="ride">Délka zkušební jízdy</option><option value="express">Expresní tarif</option><option value="average">Průměrná doba jízdy</option></select>
+        <p class="action-row"><label for="post-date">Datum u otázky na cenu</label><input type="date" name="date" id="post-date" /><button class="button">Najít odpověď</button></p>
+        <div class="callout warning" id="post-result" role="status" hidden><strong>Fiktivní údaje</strong><p></p><div></div></div>
+      </form>
+      <details><summary>Eval sada · 24 případů</summary><p>18 pro iteraci a 6 pro závěrečné měření. Interpretace otázek je v místním simulátoru předem daná. Výsledky zvlášť posuzuj na dohledání, citaci a přiznanou mezeru.</p><div class="table-wrap"><table><thead><tr><th scope="col">ID</th><th scope="col">Zadání</th><th scope="col">Očekávání</th><th scope="col">Sada</th></tr></thead><tbody>{evaluations.map((entry) => <tr><td>{entry.id}</td><td>{entry.question}</td><td>{({supported:'Doloženo',unsupported:'Nedoloženo',clarify:'Upřesnit'})[entry.state as 'supported'|'unsupported'|'clarify']} · {entry.sources.join(', ') || 'bez citace'}</td><td>{entry.split === 'test' ? 'Závěrečná' : 'Cvičná'}</td></tr>)}</tbody></table></div></details>
+    </section>
+    <section class="panel content-card" id="diagnostika">
+      <h2>Diagnostika chyby a regrese</h2>
+      <p>Fiktivní bot odpověděl „40 haléřů“ pro 1. březen. Najdi příčinu před změnou pravidel.</p>
+      <ol><li>Zapiš vstup a očekávání. Pro 1. březen je to T02 § 2 a 60 haléřů.</li><li>Otevři záznam dohledání. Když T02 chybí, zkontroluj metadata a hranice intervalu.</li><li>Pokud je T02 v předaných podkladech, prověř pravidla výběru citace a validaci odpovědi.</li><li>Přidej regresní test na 28. únor a 1. březen, chybějící datum i dotaz před existencí záznamů.</li></ol>
+      <details><summary>Samostatný případ</summary><p>Vyhlášení je 24. února, účinnost od 1. března. Nasimuluj záměnu polí. V testu požaduj 40 haléřů k 24. únoru a 60 k 1. březnu.</p></details>
+    </section>
+    <section class="panel content-card" id="opravneni">
+      <h2>Soukromí a oprávnění</h2>
+      <p>Redakční záznam se mění pouze schválením konkrétní revidované verze. Model má čtecí podklady a vrací návrh. Z dodavatelské nabídky použij cenu, jednotku a produkt. Kontakty, interní poznámky a klíče vynech.</p>
+      <p>V místním testu porovnej stav před a po požadavku studenta, staré verzi redaktora a dvou platných potvrzeních. Při čtení fiktivního podkladu s výzvou k publikaci porovnej stav se vstupem.</p>
+      <Quiz id="znalostni-bot" questions={questions.slice(5)} label="Ověřit rozhodnutí" />
+    </section>
+    <section class="panel content-card" id="nasazeni-tutora">
+      <h2>Nasazení živého tutora</h2>
+      <ol><li>Sestav statický frontend a ověř cvičení i při vypnutém serveru.</li><li>Nasaď oddělený Node server s klíčem, přístupem pro konkrétní identity a uloženými limity.</li><li>Na testovací instanci ověř neznámé ID, překročenou kvótu, odpověď s lokátorem a timeout poskytovatele.</li><li>Spusť jedno schválené živé volání a zapiš verzi, čas a výsledek. Pro návrat měj build s místním tutorem.</li></ol>
+      <p>Úplné konfigurační kroky jsou v README repozitáře. Výukový příklad najdeš i v <a href={url('lekce/vydani')}>závěrečné lekci</a>.</p>
+    </section>
+    <section class="panel content-card" id="lyzovani">
+      <h2>Volitelně · odhad návštěvnosti areálu</h2>
+      <p>Vytvoř umělé řádky s datem, dnem týdne, prázdninami, předem známou předpovědí sněhu a návštěvností. Trénuj na starších dnech. Pozdější část použij na výběr a poslední nezávislou část na měření.</p>
+      <p>Začni průměrem podle dne týdne. Srovnej s malou regresí pomocí MAE. Zapiš výsledky po víkendech a všedních dnech. Z modelu vyřaď skutečný sníh a prodeje z konce dne, protože v čase předpovědi neznáš jejich hodnotu.</p>
+      <details><summary>Kontrolní výpočet</summary><p>Fiktivní skutečnost je 140 a 210 návštěv. Pokud předpověď dá 120 a 170, MAE = (20 + 40) / 2 = 30 návštěv.</p></details>
+    </section>
+    <section class="panel content-card" id="praktika">
+      <h2>Šest praktik</h2>
+      {workshop.labs.map((lab, index) => <details id={lab.id}><summary>{index+1}. {lab.title}</summary><p class="subtle">Týden {lab.week} · příručka s. {lab.page}</p><p>{lab.goal}</p><ol>{lab.steps.map((step) => <li>{step}</li>)}</ol><p><strong>Samostatně.</strong> {lab.solo}</p><details><summary>Zobrazit vzor</summary><p>{lab.sample}</p></details></details>)}
+    </section>
+    <section class="panel content-card" id="zkouska">
+      <h2>Zkouška přenosu dovedností</h2><p>Odpověz vlastními slovy. U každé situace přidej jednu chybu, kterou bys otestoval/a. Zkoušku zopakuj po 6., 12. a 18. týdnu.</p>
+      <ol>{workshop.transfer.map((entry) => <li>{entry.question}<details><summary>Vzor odpovědi</summary><p>{entry.sample}</p></details></li>)}</ol>
+      <Notebook id="zkouska-prenosu" rubric={['Navrhl/a jsem měřitelný výsledek.', 'Doložil/a jsem volbu postupu závislostmi a zdroji.', 'Popsal/a jsem reprodukovatelné selhání a ověření.']} label="Tvoje odpovědi a důkazy" />
+    </section>
+  </div>
+  <script>
+    import { findSources, postAnswer } from '../lib/post.mjs';
+    const renderLinks = (container: Element, ids: string[]) => {
+      container.replaceChildren();
+      for (const id of ids) {
+        const link = document.createElement('a');
+        link.href = '#' + id;
+        link.textContent = id;
+        container.append(link, document.createTextNode(' '));
+      }
+    };
+    document.querySelector<HTMLFormElement>('#source-search')!.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const value = document.querySelector<HTMLInputElement>('#source-query')!.value;
+      const results = findSources(value);
+      const out = document.querySelector('#source-results')!;
+      renderLinks(out, results.map((source) => source.id));
+      if (!results.length) out.textContent = 'Žádný úsek se nenašel.';
+      else out.prepend(document.createTextNode('Nalezené fiktivní prameny: '));
+    });
+    const bot = document.querySelector<HTMLFormElement>('#post-bot')!;
+    bot.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const form = new FormData(bot);
+      const result = postAnswer(String(form.get('intent')), String(form.get('date') || ''));
+      const container = document.querySelector<HTMLElement>('#post-result')!;
+      container.hidden = false;
+      container.querySelector('p')!.textContent = result.text;
+      renderLinks(container.querySelector('div')!, result.ids);
+    });
+  </script>
+</Shell>

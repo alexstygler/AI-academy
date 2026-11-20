@@ -1,0 +1,9 @@
+node_modules/
+dist/
+dist-test/
+.astro/
+.env
+.env.*
+!.env.example
+.editorial/
+*.sqlite*

@@ -1,0 +1,281 @@
+[
+  {
+    "id": "P01",
+    "kind": "přímočará",
+    "question": "Cena 1. února",
+    "intent": "price",
+    "date": "1937-02-01",
+    "state": "supported",
+    "sources": [
+      "T01"
+    ],
+    "split": "practice"
+  },
+  {
+    "id": "P02",
+    "kind": "přímočará",
+    "question": "Cena 15. února",
+    "intent": "price",
+    "date": "1937-02-15",
+    "state": "supported",
+    "sources": [
+      "T01"
+    ],
+    "split": "practice"
+  },
+  {
+    "id": "P03",
+    "kind": "přímočará",
+    "question": "Cena 28. února",
+    "intent": "price",
+    "date": "1937-02-28",
+    "state": "supported",
+    "sources": [
+      "T01"
+    ],
+    "split": "practice"
+  },
+  {
+    "id": "P04",
+    "kind": "přímočará",
+    "question": "Cena 1. března",
+    "intent": "price",
+    "date": "1937-03-01",
+    "state": "supported",
+    "sources": [
+      "T02"
+    ],
+    "split": "test"
+  },
+  {
+    "id": "P05",
+    "kind": "přímočará",
+    "question": "Cena 10. března",
+    "intent": "price",
+    "date": "1937-03-10",
+    "state": "supported",
+    "sources": [
+      "T02"
+    ],
+    "split": "practice"
+  },
+  {
+    "id": "P06",
+    "kind": "přímočará",
+    "question": "Vyhlášení tarifu B",
+    "intent": "published",
+    "date": "",
+    "state": "supported",
+    "sources": [
+      "T02"
+    ],
+    "split": "practice"
+  },
+  {
+    "id": "P07",
+    "kind": "přímočará",
+    "question": "Délka zkušební jízdy",
+    "intent": "ride",
+    "date": "",
+    "state": "supported",
+    "sources": [
+      "T03"
+    ],
+    "split": "test"
+  },
+  {
+    "id": "P08",
+    "kind": "přímočará",
+    "question": "Cena 2. dubna",
+    "intent": "price",
+    "date": "1937-04-02",
+    "state": "supported",
+    "sources": [
+      "T02"
+    ],
+    "split": "practice"
+  },
+  {
+    "id": "P09",
+    "kind": "parafráze",
+    "question": "Kolik stojí odeslání standardu v půli února?",
+    "intent": "price",
+    "date": "1937-02-14",
+    "state": "supported",
+    "sources": [
+      "T01"
+    ],
+    "split": "practice"
+  },
+  {
+    "id": "P10",
+    "kind": "parafráze",
+    "question": "V březnu posílám obyčejné pouzdro, co zaplatím?",
+    "intent": "price",
+    "date": "1937-03-05",
+    "state": "supported",
+    "sources": [
+      "T02"
+    ],
+    "split": "practice"
+  },
+  {
+    "id": "P11",
+    "kind": "parafráze",
+    "question": "Kdy oznámili přechod na B?",
+    "intent": "published",
+    "date": "",
+    "state": "supported",
+    "sources": [
+      "T02"
+    ],
+    "split": "practice"
+  },
+  {
+    "id": "P12",
+    "kind": "parafráze",
+    "question": "Za jak dlouho dorazila testovací zásilka?",
+    "intent": "ride",
+    "date": "",
+    "state": "supported",
+    "sources": [
+      "T03"
+    ],
+    "split": "practice"
+  },
+  {
+    "id": "P13",
+    "kind": "parafráze",
+    "question": "Ještě těsně před koncem února, jaký poplatek?",
+    "intent": "price",
+    "date": "1937-02-27",
+    "state": "supported",
+    "sources": [
+      "T01"
+    ],
+    "split": "test"
+  },
+  {
+    "id": "P14",
+    "kind": "parafráze",
+    "question": "Tarif po změně mezi hlavními stanicemi",
+    "intent": "price",
+    "date": "1937-03-02",
+    "state": "supported",
+    "sources": [
+      "T02"
+    ],
+    "split": "practice"
+  },
+  {
+    "id": "P15",
+    "kind": "rozpor",
+    "question": "Tarif B je zveřejněn 24. 2. Co skutečně platí 24. 2.?",
+    "intent": "price",
+    "date": "1937-02-24",
+    "state": "supported",
+    "sources": [
+      "T01"
+    ],
+    "split": "practice"
+  },
+  {
+    "id": "P16",
+    "kind": "rozpor",
+    "question": "T01 a T02 uvádějí různé částky. Kolik bez data?",
+    "intent": "price",
+    "date": "",
+    "state": "clarify",
+    "sources": [
+      "T01",
+      "T02"
+    ],
+    "split": "test"
+  },
+  {
+    "id": "P17",
+    "kind": "rozpor",
+    "question": "Našel jsem starší tarif. Co platí 3. března?",
+    "intent": "price",
+    "date": "1937-03-03",
+    "state": "supported",
+    "sources": [
+      "T02"
+    ],
+    "split": "practice"
+  },
+  {
+    "id": "P18",
+    "kind": "rozpor",
+    "question": "Oznámení je z února. Zaplatím 25. února 60?",
+    "intent": "price",
+    "date": "1937-02-25",
+    "state": "supported",
+    "sources": [
+      "T01"
+    ],
+    "split": "practice"
+  },
+  {
+    "id": "P19",
+    "kind": "bez důkazu",
+    "question": "Kolik stojí expres?",
+    "intent": "express",
+    "date": "",
+    "state": "unsupported",
+    "sources": [],
+    "split": "practice"
+  },
+  {
+    "id": "P20",
+    "kind": "bez důkazu",
+    "question": "Jaká je průměrná doba jízdy?",
+    "intent": "average",
+    "date": "",
+    "state": "unsupported",
+    "sources": [
+      "T03"
+    ],
+    "split": "test"
+  },
+  {
+    "id": "P21",
+    "kind": "bez důkazu",
+    "question": "Cena v lednu",
+    "intent": "price",
+    "date": "1937-01-20",
+    "state": "unsupported",
+    "sources": [],
+    "split": "practice"
+  },
+  {
+    "id": "P22",
+    "kind": "bez důkazu",
+    "question": "Existuje trasa C–D?",
+    "intent": "other",
+    "date": "",
+    "state": "unsupported",
+    "sources": [],
+    "split": "practice"
+  },
+  {
+    "id": "P23",
+    "kind": "bez důkazu",
+    "question": "Kolik jelo pouzder za celý rok?",
+    "intent": "other",
+    "date": "",
+    "state": "unsupported",
+    "sources": [],
+    "split": "practice"
+  },
+  {
+    "id": "P24",
+    "kind": "bez důkazu",
+    "question": "Známe cenu celou zimu 1936?",
+    "intent": "price",
+    "date": "1936-12-09",
+    "state": "unsupported",
+    "sources": [],
+    "split": "test"
+  }
+]

@@ -1,0 +1,33 @@
+---
+interface Props { id: string; rubric: string[]; label?: string; }
+const { id, rubric, label = 'Tvoje řešení a poznámka' } = Astro.props;
+---
+<form method="dialog" data-notebook={id}>
+  <fieldset>
+    <legend>Sebehodnocení</legend>
+    {rubric.map((item, index) => <label class="option"><input type="checkbox" name="rubric" value={index} /><span>{item}</span></label>)}
+  </fieldset>
+  <label for={`note-${id}`}><strong>{label}</strong></label>
+  <textarea id={`note-${id}`} name="note" rows="3" maxlength="6000" placeholder="Co jsi vyzkoušel/a a co bys příště upravil/a?"></textarea>
+  <button type="submit" class="button secondary">Uložit poznámku</button>
+  <p role="status" class="field-status" data-notebook-status></p>
+</form>
+<script>
+  import { readProgress, updateRecord, progressMessage } from '../lib/progress';
+  for (const form of document.querySelectorAll<HTMLFormElement>('[data-notebook]')) {
+    const id = form.dataset.notebook!;
+    const record = readProgress().data.lessons[id];
+    const note = form.querySelector<HTMLTextAreaElement>('textarea')!;
+    const status = form.querySelector('[data-notebook-status]')!;
+    if (record) {
+      note.value = record.note;
+      for (const checkbox of form.querySelectorAll<HTMLInputElement>('input[name=rubric]')) checkbox.checked = record.rubric.includes(Number(checkbox.value));
+    }
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const checked = new FormData(form).getAll('rubric').map(Number);
+      const problem = updateRecord(id, (entry) => { entry.note = note.value; entry.rubric = checked; entry.opened = true; });
+      status.textContent = problem ? progressMessage(problem) : 'Poznámka je uložená v tomto prohlížeči.';
+    });
+  }
+</script>

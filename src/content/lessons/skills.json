@@ -1,0 +1,72 @@
+{
+  "version": 1,
+  "id": "skills",
+  "week": 7,
+  "title": "Skills a instrukce",
+  "goal": "Zabal opakovatelný rešeršní postup do použitelné dovednosti.",
+  "minutes": 40,
+  "prerequisites": [
+    "vyvoj-s-ai"
+  ],
+  "sourceChapter": "Týden 7 · Skills a automatizace",
+  "sourcePage": 25,
+  "theory": "Projektové instrukce popisují pravidla práce v repozitáři. Skill popisuje opakovatelný odborný postup, situace aktivace, vstupy a výsledek. Plugin může připojit další schopnosti nebo nástroje.",
+  "detail": "Rešeršní skill má vymezit období, vyhledat pramen, zapsat lokátor, zpracovat rozpor a přiznat mezeru. Ověř, zda se spouští na správných úlohách a drží se důkazů.",
+  "example": "Popis „použij pro ověřování historických tvrzení z pramenů“ je přesnější spouštěč než „pomáhá se vším okolo historie“.",
+  "guided": "Sepiš SKILL.md pro historickou rešerši. Přidej tři dotazy, které ho potřebují, a dva tvůrčí dotazy mimo rozsah.",
+  "independent": "Doplň situaci s neplatným datem a uprav aktivaci podle zkušebních výsledků.",
+  "hint": "Nejdřív validuj datum, potom sháněj důkaz. Výstup má stabilní pole.",
+  "sample": "Skill vrací tvrzení, pasáž, datum a stav. Na 31. únor hlásí neplatné datum. Při vymýšlení názvu historického hostince se nepoužije.",
+  "questions": [
+    {
+      "id": "q1",
+      "prompt": "K čemu se nejlépe hodí skill?",
+      "options": [
+        {
+          "text": "K uložení tajného klíče",
+          "feedback": "Soubor skillu může být v Gitu a v kontextu asistenta. Klíč patří do určeného úložiště."
+        },
+        {
+          "text": "K provedení opakovatelného postupu",
+          "feedback": "Skill učí postup. Načasování patří plánovači."
+        },
+        {
+          "text": "K plánování pondělního času bez plánovače",
+          "feedback": "Skill popisuje postup. Čas běhu nastav samostatným plánovačem."
+        }
+      ],
+      "answer": 1
+    },
+    {
+      "id": "q2",
+      "prompt": "Jak ověříš správný rozsah aktivace?",
+      "options": [
+        {
+          "text": "Zkusím vhodná i podobná nevhodná zadání",
+          "feedback": "Negativní případy odhalí příliš široký popis."
+        },
+        {
+          "text": "Zkusím jen jednoduchý vhodný dotaz",
+          "feedback": "Jediný kladný příklad neověří, že skill zůstane vypnutý u podobného tvůrčího dotazu."
+        },
+        {
+          "text": "Změřím délku souboru SKILL.md",
+          "feedback": "Délka souboru neměří vhodnost aktivace ani formát výsledku."
+        }
+      ],
+      "answer": 0
+    }
+  ],
+  "rubric": [
+    "Popsal/a jsem postup a jeho výsledek.",
+    "Výsledek jsem ověřil/a podle konkrétního podkladu nebo testu.",
+    "Uvedl/a jsem hraniční případ či nejistotu a co s ní udělám."
+  ],
+  "sources": [
+    {
+      "label": "Agent Skills · Specifikace",
+      "url": "https://agentskills.io/specification"
+    }
+  ],
+  "code": null
+}

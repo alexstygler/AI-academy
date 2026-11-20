@@ -1,0 +1,105 @@
+---
+import { ArrowUpRight, BookOpen, Compass, FlaskConical, LayoutDashboard, Menu, Search, Sparkles, X, Newspaper, CircleHelp, ChevronsUpDown } from 'lucide-astro';
+import { lessons, lessonUrl, url } from '../lib/course';
+import { atlas, workshop } from '../lib/catalog';
+import '@fontsource-variable/inter';
+import '@fontsource-variable/manrope';
+import '../styles/site.css';
+
+const { title, active = 'home', breadcrumb = 'Přehled' } = Astro.props;
+const navigation = [
+  { id: 'home', title: 'Přehled', path: '', icon: LayoutDashboard },
+  { id: 'lessons', title: 'Studijní plán', path: 'lekce', icon: BookOpen },
+  { id: 'workshop', title: 'Projektová dílna', path: 'dilna', icon: FlaskConical },
+  { id: 'atlas', title: 'Atlas nástrojů', path: 'atlas', icon: Compass },
+  { id: 'news', title: 'Pondělní přehled', path: 'prehled', icon: Newspaper },
+];
+---
+<!doctype html>
+<html lang="cs">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f7f9fc" />
+    <meta name="description" content="Praktický 18týdenní kurz práce s umělou inteligencí." />
+    <title>{title} | AI akademie</title>
+    <link rel="icon" href={import.meta.env.BASE_URL.replace(/\/$/,'') + '/favicon.png'} />
+  </head>
+  <body data-lesson-ids={JSON.stringify(lessons.map((lesson) => lesson.id))}>
+    <a class="skip" href="#main">Přeskočit na obsah</a>
+    <div class="shell">
+      <aside class="sidebar" id="sidebar">
+        <a class="brand" href={url()}><span class="brand-icon"><Sparkles size={23} strokeWidth={2} /></span><span><strong>AI akademie</strong><small>PRO ALEXE</small></span></a>
+        <nav aria-label="Hlavní navigace">
+          <p class="nav-label">STUDIUM</p>
+          {navigation.map(({ id, title: label, path, icon: Icon }) =>
+            <a class:list={['nav-link', { current: id === active }]} aria-current={id === active ? 'page' : undefined} href={url(path)}><Icon size={19} strokeWidth={1.9} /><span>{label}</span></a>
+          )}
+        </nav>
+        <div class="sidebar-foot">
+          <a class:list={['nav-link', { current: active === 'help' }]} href={url('zdroje')} aria-current={active === 'help' ? 'page' : undefined}><CircleHelp size={19} strokeWidth={1.9} /><span>Nápověda a zdroje</span></a>
+          <a class="profile" href={url('pokrok')}><span class="avatar">A</span><span><strong>Alex</strong><small>Můj pokrok</small></span><ChevronsUpDown size={15} class="profile-arrow" /></a>
+        </div>
+      </aside>
+      <div class="workspace">
+        <header class="topbar">
+          <button type="button" class="icon-button mobile-menu" aria-label="Otevřít navigaci" aria-expanded="false" aria-controls="sidebar"><Menu size={22} /></button>
+          <div class="breadcrumb"><span>Akademie</span><span aria-hidden="true">/</span><strong>{breadcrumb}</strong></div>
+          <button type="button" class="search-button" aria-label="Vyhledat v akademii" data-search-open><Search size={17} /><span>Vyhledat v akademii…</span><kbd aria-hidden="true">⌘ K</kbd></button>
+          <a class="top-avatar avatar" href={url('pokrok')} aria-label="Můj pokrok">A</a>
+        </header>
+        <main id="main" class="main"><slot /></main>
+      </div>
+    </div>
+    <dialog class="search-dialog" aria-labelledby="search-label">
+      <div class="dialog-head"><Search size={19} /><label class="visually-hidden" id="search-label" for="global-search">Vyhledat v akademii</label><input id="global-search" type="search" placeholder="Hledej lekce, praktika nebo nástroje…" autofocus /><form method="dialog"><button class="icon-button" aria-label="Zavřít hledání"><X size={20} /></button></form></div>
+      <ul class="search-results">
+        {lessons.map((lesson) => <li hidden data-result={lesson.goal}><a href={lessonUrl(lesson.id)}><span>{lesson.title}<small>Lekce · týden {lesson.week}</small></span><ArrowUpRight size={16} /></a></li>)}
+        {workshop.labs.map((lab) => <li hidden data-result={lab.goal}><a href={url('dilna') + '#' + lab.id}><span>{lab.title}<small>Praktikum · týden {lab.week}</small></span><ArrowUpRight size={16} /></a></li>)}
+        {atlas.tools.map((tool) => <li hidden data-result={tool.description + ' ' + tool.provider + ' ' + tool.task}><a href={url('atlas') + '#' + tool.id}><span>{tool.name}<small>Atlas · {tool.provider}</small></span><ArrowUpRight size={16} /></a></li>)}
+        {navigation.slice(2).map((entry) => <li hidden data-result=""><a href={url(entry.path)}><span>{entry.title}<small>Akademie</small></span><ArrowUpRight size={16} /></a></li>)}
+      </ul>
+      <p class="search-empty" role="status">Zadej téma, třeba „citace“.</p>
+    </dialog>
+    <script>
+      const dialog = document.querySelector<HTMLDialogElement>('.search-dialog')!;
+      const search = document.querySelector<HTMLInputElement>('#global-search')!;
+      const results = [...dialog.querySelectorAll<HTMLLIElement>('[data-result]')];
+      const empty = dialog.querySelector<HTMLElement>('.search-empty')!;
+      const normalize = (text: string) => text.toLocaleLowerCase('cs').normalize('NFD').replace(/\p{Diacritic}/gu, '');
+      const showSearch = () => { if (!dialog.open) dialog.showModal(); search.focus(); };
+      document.querySelector('[data-search-open]')?.addEventListener('click', showSearch);
+      document.addEventListener('keydown', (event) => {
+        if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') { event.preventDefault(); showSearch(); }
+      });
+      dialog.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') { event.preventDefault(); dialog.close(); }
+      });
+      dialog.addEventListener('click', (event) => { if (event.target === dialog) dialog.close(); });
+      search.addEventListener('input', () => {
+        const query = normalize(search.value.trim());
+        let count = 0;
+        for (const row of results) {
+          row.hidden = !query || !normalize(row.textContent + ' ' + row.dataset.result).includes(query);
+          if (!row.hidden) count++;
+        }
+        empty.hidden = count > 0;
+        empty.textContent = query ? 'Nic jsme nenašli. Zkus jiný výraz.' : 'Zadej téma, třeba „citace“.';
+      });
+      function revealFragment() {
+        const id = location.hash.slice(1);
+        if (!id) return;
+        const target = document.getElementById(id);
+        if (!target) return;
+        for (let details = target.closest('details'); details; details = details.parentElement?.closest('details') ?? null) details.open = true;
+      }
+      revealFragment();
+      window.addEventListener('hashchange', revealFragment);
+      const menu = document.querySelector<HTMLButtonElement>('.mobile-menu')!;
+      const sidebar = document.querySelector<HTMLElement>('.sidebar')!;
+      const toggleMenu = (open: boolean) => { menu.setAttribute('aria-expanded', String(open)); sidebar.classList.toggle('open', open); };
+      menu.addEventListener('click', () => toggleMenu(menu.getAttribute('aria-expanded') !== 'true'));
+      document.addEventListener('keydown', (event) => { if (event.key === 'Escape' && sidebar.classList.contains('open')) { toggleMenu(false); menu.focus(); } });
+    </script>
+  </body>
+</html>

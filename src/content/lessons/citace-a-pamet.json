@@ -1,0 +1,72 @@
+{
+  "version": 1,
+  "id": "citace-a-pamet",
+  "week": 12,
+  "title": "Citace, konflikty a paměť",
+  "goal": "Diagnostikuj chybu citace a vymez, co patří do paměti aplikace.",
+  "minutes": 45,
+  "prerequisites": [
+    "rag"
+  ],
+  "sourceChapter": "Týden 12 · RAG a paměť",
+  "sourcePage": 27,
+  "theory": "Testuj zvlášť dohledání správného úseku a použití úseku v odpovědi. Když úsek chybí, zkontroluj data, OCR, metadatové filtry a dotaz. Když je v kontextu, ověř instrukce, formát a kontrolu citace.",
+  "detail": "Rozporné zdroje uveď s jejich působností a daty. Je-li podklad slabý, uveď, co přesně chybí. Paměť uživatele ukládá vybraný stav, například poslední lekci. Dokumenty patří do aktualizovatelného indexu.",
+  "example": "Bot cituje T01 pro 1. březen. Nejdřív se podívej, zda retrieval vrátil T02. Oprava indexu a oprava generátoru řeší jiné příčiny.",
+  "guided": "Simuluj obě příčiny: poprvé T02 ze snippetu vynech, podruhé ho ponech a vyber špatné ID. Zapiš rozdílné opravy.",
+  "independent": "Vymez stav pro studenta a stav pro korpus. Pro každý údaj napiš důvod uložení a způsob odstranění.",
+  "hint": "Ulož lokátor a období u dokumentu, vybraný pokrok do uživatelského úložiště.",
+  "sample": "Poslední lekci lze resetovat. Aktualizaci tarifu proveď novou verzí úseku. Citace ověřuje ID i datum a odpověď přizná mezeru.",
+  "questions": [
+    {
+      "id": "q1",
+      "prompt": "T02 je v kontextu, výstup přesto cituje T01. Co testuješ jako první?",
+      "options": [
+        {
+          "text": "Rychlost databáze",
+          "feedback": "Latence neurčí, proč generátor vybral špatný pramen z dostupného kontextu."
+        },
+        {
+          "text": "Barvu výstupu",
+          "feedback": "Vizuální styl neovlivnil data použitá v odpovědi."
+        },
+        {
+          "text": "Pravidla generování a validaci citace",
+          "feedback": "Správný úsek byl dohledán. Chyba nastala při jeho použití."
+        }
+      ],
+      "answer": 2
+    },
+    {
+      "id": "q2",
+      "prompt": "Kam patří aktuální tarif pro citování?",
+      "options": [
+        {
+          "text": "Do aktualizovatelného indexu zdrojů",
+          "feedback": "Index drží znění i metadata potřebná pro doložení."
+        },
+        {
+          "text": "Do nastavení barvy prohlížeče",
+          "feedback": "Předvolby prohlížeče nepředstavují dohledatelnou znalostní bázi s daty."
+        },
+        {
+          "text": "Do obyčejného promptu bez původu",
+          "feedback": "Bez původu nelze spolehlivě ověřit ani revidovat citaci."
+        }
+      ],
+      "answer": 0
+    }
+  ],
+  "rubric": [
+    "Popsal/a jsem postup a jeho výsledek.",
+    "Výsledek jsem ověřil/a podle konkrétního podkladu nebo testu.",
+    "Uvedl/a jsem hraniční případ či nejistotu a co s ní udělám."
+  ],
+  "sources": [
+    {
+      "label": "Lewis a kol. · Retrieval-Augmented Generation",
+      "url": "https://arxiv.org/abs/2005.11401"
+    }
+  ],
+  "code": null
+}

@@ -1,0 +1,21 @@
+---
+import Shell from '../../components/Shell.astro';
+import WeekRow from '../../components/WeekRow.astro';
+import { modules, url } from '../../lib/course';
+---
+<Shell title="Studijní plán" active="lessons" breadcrumb="Studijní plán">
+  <header class="page-intro"><p class="eyebrow">18 TÝDNŮ · 9 MODULŮ</p><h1>Studijní plán</h1><p>Postupuj od prvních odpovědí po vlastní aplikaci. Všechny lekce jsou přístupné kdykoliv.</p><a class="text-link" href={url('pokrok')}>Zobrazit můj pokrok →</a></header>
+  <div class="module-grid">{modules.map((_, index) => <WeekRow index={index} expanded />)}</div>
+  <script>
+    import { readProgress } from '../../lib/progress';
+    function refresh() {
+      const state = readProgress().data;
+      for (const element of document.querySelectorAll<HTMLElement>('[data-state-for]')) {
+        const record = state.lessons[element.dataset.stateFor!];
+        element.textContent = record?.completed ? 'Splněno' : record?.opened ? 'Otevřeno' : '';
+      }
+    }
+    refresh();
+    window.addEventListener('pageshow', refresh);
+  </script>
+</Shell>

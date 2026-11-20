@@ -1,0 +1,54 @@
+---
+import { ArrowUpRight, Compass } from 'lucide-astro';
+import Shell from '../components/Shell.astro';
+import { atlas } from '../lib/catalog';
+const tools = atlas.tools;
+const filters = [
+  { id: 'task', label: 'Podle práce', values: [...new Set(tools.map((tool) => tool.task))].sort((a,b)=>a.localeCompare(b,'cs')) },
+  { id: 'provider', label: 'Poskytovatel', values: [...new Set(tools.map((tool) => tool.provider))].sort((a,b)=>a.localeCompare(b,'cs')) },
+  { id: 'type', label: 'Typ', values: [...new Set(tools.map((tool) => tool.type))].sort((a,b)=>a.localeCompare(b,'cs')) },
+];
+const glossary = [
+  ['Model','Naučené váhy a architektura, které zpracují vstup a odhadují výstup. Jeden model může používat několik aplikací.'],
+  ['Aplikace','Prostředí pro uživatele. Přidává například práci s dokumenty, historii, nástroje a přístup podle účtu.'],
+  ['Vývojový nástroj','Pomáhá stavět nebo provozovat software. Příklady jsou agent v repozitáři a vizuální editor workflow.'],
+  ['API','Programové rozhraní s kontraktem vstupu, odpovědi, autorizace a chyb. Klíče k modelům patří na server.'],
+  ['Token','Jednotka, na kterou tokenizer rozdělí vstup nebo výstup. Může odpovídat části slova.'],
+  ['Kontext','Pracovní soubor instrukcí, vstupů a podkladů pro jeden běh. Aplikace do něj může vložit paměť nebo úryvky.'],
+  ['RAG','Nejdřív hledá podklady a pak je předá modelu pro odpověď. Citace vyžadují vlastní kontrolu.'],
+  ['MCP','Protokol mezi hostitelem, klientem a serverem pro nástroje, zdroje a šablony. Oprávnění vynucuje implementace.'],
+  ['Skill','Znovupoužitelný postup, který popíše vhodný úkol, kroky a podobu výsledku.'],
+  ['Eval','Opakovatelné měření nad případy s očekáváním a pravidly hodnocení.'],
+];
+---
+<Shell title="Atlas nástrojů" active="atlas" breadcrumb="Atlas nástrojů">
+  <header class="page-intro"><p class="eyebrow">VÝBĚR PODLE ÚLOHY</p><h1>Atlas nástrojů</h1><p>Najdi nástroj pro rešerši, vývoj, tabulky, automatizaci nebo média. V atlasu vycházíme z dokumentace uložené v příručce k 19. listopadu 2026.</p><a class="text-link" href="#slovnik">Přejít na slovník ↓</a></header>
+  <form class="panel filters" id="atlas-filter">
+    <div><label for="atlas-query">Hledat</label><input class="filter-input" type="search" id="atlas-query" name="query" placeholder="Název nebo schopnost"/></div>
+    {filters.map((filter) => <div><label for={'filter-'+filter.id}>{filter.label}</label><select name={filter.id} id={'filter-'+filter.id}><option value="">Všechny</option>{filter.values.map((value) => <option value={value}>{value}</option>)}</select></div>)}
+  </form>
+  <p role="status" class="field-status" id="atlas-count">{tools.length} položek</p>
+  <div class="atlas-grid">{tools.map((tool) => <article class="panel tool-tile" data-tool data-id={tool.id} data-provider={tool.provider} data-type={tool.type} data-task={tool.task} id={tool.id}>
+    <span class="tile-icon blue"><Compass size={19} /></span><h2>{tool.name}</h2><div class="tag-list">{[tool.provider,tool.type,tool.task].map((tag) => <span class="status-tag">{tag}</span>)}</div><p>{tool.description}</p>
+    <footer><time datetime={tool.checkedAt}>Ověření v příručce · 19. 11. 2026</time><a href={tool.url}>Dokumentace <ArrowUpRight size={12} /></a></footer>
+  </article>)}</div>
+  <section class="panel content-card" id="slovnik" style="margin-top: 20px"><h2>Slovník</h2><dl>{glossary.map(([word,definition]) => <div class="source-doc"><dt><strong>{word}</strong></dt><dd>{definition}</dd></div>)}</dl></section>
+  <script>
+    const form = document.querySelector<HTMLFormElement>('#atlas-filter')!;
+    const tools = [...document.querySelectorAll<HTMLElement>('[data-tool]')];
+    const count = document.querySelector('#atlas-count')!;
+    const normalize = (value: string) => value.toLowerCase().normalize('NFD').replace(/\p{Diacritic}/gu, '');
+    function update() {
+      const data = new FormData(form);
+      const query = normalize(String(data.get('query') || '').trim());
+      let visible = 0;
+      for (const tool of tools) {
+        tool.hidden = !normalize(tool.textContent || '').includes(query) || ['task','provider','type'].some((field) => data.get(field) && data.get(field) !== tool.dataset[field]);
+        if (!tool.hidden) visible++;
+      }
+      count.textContent = visible ? `${visible} položek` : 'Žádná položka. Zkus upravit filtr.';
+    }
+    form.addEventListener('input', update);
+    form.addEventListener('submit', (event) => { event.preventDefault(); update(); });
+  </script>
+</Shell>

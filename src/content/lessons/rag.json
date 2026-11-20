@@ -1,0 +1,72 @@
+{
+  "version": 1,
+  "id": "rag",
+  "week": 11,
+  "title": "RAG a vyhledávání",
+  "goal": "Získej správný úsek se zdrojovými metadaty a změř dohledání.",
+  "minutes": 45,
+  "prerequisites": [
+    "tool-calling"
+  ],
+  "sourceChapter": "Týden 11 · RAG a paměť",
+  "sourcePage": 27,
+  "theory": "RAG nejdřív dohledá úseky, potom je vloží do kontextu odpovědi. U každého úseku zachovej zdroj, lokátor, datum a verzi. Začni čitelným korpusem a obyčejným fulltextem.",
+  "detail": "Fulltext umí najít přesné identifikátory, embeddingy pomohou s parafrází a hybrid může využít obojí. Filtr data může vyloučit jinak velmi podobný, ale neplatný pramen.",
+  "example": "Dotaz na standardní pouzdro 1. března najde podobné T01 i T02. Datum účinnosti určí, že přípustnou pasáží je T02 § 2.",
+  "guided": "Na dílně porovnej hledání „T02“ a „cena po změně v březnu“. U každého zapiš, který úsek byl nalezen a zda obsahuje důkaz.",
+  "independent": "Připrav pět otázek, včetně parafráze a dotazu mimo platnost. Pro každou uveď všechna relevantní ID případně žádné.",
+  "hint": "Recall@k je počet nalezených relevantních úseků dělený všemi relevantními úseky.",
+  "sample": "Ze tří ručně označených úseků našel systém v prvních pěti dva. Recall@5 je 2/3. Chybějící odpověď analyzuji samostatně.",
+  "questions": [
+    {
+      "id": "q1",
+      "prompt": "Co při vyhledání musí zůstat u úseku?",
+      "options": [
+        {
+          "text": "Jen klíčová slova",
+          "feedback": "Klíčová slova pomohou hledat, ale nestačí pro dohledatelnou a časově správnou citaci."
+        },
+        {
+          "text": "ID, lokátor a platnost",
+          "feedback": "Metadata umožní citaci a výběr správné verze."
+        },
+        {
+          "text": "Pouze vektor bez textu",
+          "feedback": "Vektor pomáhá hledat. Text a metadata potřebuješ k ověření tvrzení."
+        }
+      ],
+      "answer": 1
+    },
+    {
+      "id": "q2",
+      "prompt": "Co znamená recall@5 = 2/3?",
+      "options": [
+        {
+          "text": "Dva ze tří relevantních úseků se našly v prvních pěti",
+          "feedback": "Recall měří pokrytí známých relevantních úseků."
+        },
+        {
+          "text": "Správné jsou dvě pětiny všech odpovědí",
+          "feedback": "Jmenovatel tvoří všechny relevantní úseky pro dotaz. Netvoří ho počet prohlédnutých položek."
+        },
+        {
+          "text": "Model má dvě odpovědi bez citace",
+          "feedback": "Recall@5 měří dohledání pasáží. Citace ve výsledku je zvláštní kontrola."
+        }
+      ],
+      "answer": 0
+    }
+  ],
+  "rubric": [
+    "Popsal/a jsem postup a jeho výsledek.",
+    "Výsledek jsem ověřil/a podle konkrétního podkladu nebo testu.",
+    "Uvedl/a jsem hraniční případ či nejistotu a co s ní udělám."
+  ],
+  "sources": [
+    {
+      "label": "OpenAI · File Search",
+      "url": "https://platform.openai.com/docs/guides/tools-file-search"
+    }
+  ],
+  "code": null
+}

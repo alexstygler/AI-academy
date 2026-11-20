@@ -1,0 +1,37 @@
+name: Ověření akademie
+on:
+  pull_request:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    env:
+      ASTRO_TELEMETRY_DISABLED: '1'
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm run check
+      - run: npm test
+      - run: npm run build
+      - run: npx playwright install --with-deps chromium
+      - name: Testy v prohlížeči
+        shell: bash
+        run: |
+          npm run preview -- --host 127.0.0.1 --port 4321 &
+          preview_pid=$!
+          PUBLIC_TUTOR_URL=https://tutor.academy.test/v1/tutor ACADEMY_BUILD_DIR=dist-test npm run build
+          ACADEMY_BUILD_DIR=dist-test npm run preview -- --host 127.0.0.1 --port 4322 &
+          tutor_fixture_pid=$!
+          trap 'kill "$preview_pid" "$tutor_fixture_pid" 2>/dev/null || true' EXIT
+
+          for endpoint in http://127.0.0.1:4321/AI-academy/ http://127.0.0.1:4322/AI-academy/; do
+            curl --fail --silent --show-error --retry 12 --retry-connrefused --retry-delay 1 "$endpoint" > /dev/null
+          done
+          npm run test:browser

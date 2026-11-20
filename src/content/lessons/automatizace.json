@@ -1,0 +1,72 @@
+{
+  "version": 1,
+  "id": "automatizace",
+  "week": 8,
+  "title": "Automatizace a n8n",
+  "goal": "Sestav opakovatelné workflow, které ukládá návrh pod stabilním ID.",
+  "minutes": 45,
+  "prerequisites": [
+    "skills"
+  ],
+  "sourceChapter": "Týden 8 · Skills a automatizace",
+  "sourcePage": 25,
+  "theory": "Workflow propojí trigger, vstupy, transformaci, validaci a uložení. Manuální a naplánovaný trigger mají volat stejnou logiku. Pro kontrolu času používej jasné časové pásmo a hranice intervalu.",
+  "detail": "Při opakovaném běhu aktualizuj jediný koncept podle ID týdne. Po výpadku zdroje zapiš mezeru. Odděl uložení návrhu a ruční schválení.",
+  "example": "Uzavřený týden je interval od minulého pondělí 00:00 včetně do tohoto pondělí 00:00 výlučně, v Praze. Pondělní a úterní běh mohou mít totožné ID.",
+  "guided": "Spusť příkaz pro místní vydání dvakrát se stejným referenčním datem. Zkontroluj ID, hranice a počet souborů.",
+  "independent": "Přidej případ s opakovanou URL a timeoutem jednoho zdroje. Navrhni, jak redaktor uvidí chybějící pokrytí.",
+  "hint": "Pro novou verzi návrhu použij stejné ID, zdrojovou chybu ulož do metadat.",
+  "sample": "Jeden soubor pro týden a jedna položka pro kanonickou URL. Výpadek je vidět v mezerách pokrytí. Stav zůstává k revizi.",
+  "questions": [
+    {
+      "id": "q1",
+      "prompt": "Jak zabráníš dvěma návrhům stejného týdne?",
+      "options": [
+        {
+          "text": "Náhodným ID každého běhu",
+          "feedback": "Náhodná ID by ze stejného intervalu udělala více různých konceptů."
+        },
+        {
+          "text": "Přeskočením všech ručních běhů",
+          "feedback": "Ruční běh je užitečný pro obnovu. Stejné ID zabrání duplicitě i u plánovaného opakování."
+        },
+        {
+          "text": "Aktualizací podle stabilního ID období",
+          "feedback": "Běhy pak míří na stejný záznam."
+        }
+      ],
+      "answer": 2
+    },
+    {
+      "id": "q2",
+      "prompt": "Který záznam patří ještě do uzavřeného týdne?",
+      "options": [
+        {
+          "text": "Neděle 23:59 místního času",
+          "feedback": "Koncová hranice je výlučná."
+        },
+        {
+          "text": "Pondělí 00:00 na konci okna",
+          "feedback": "Pondělí 00:00 je první okamžik nového týdne. Předchozí okno ho vylučuje."
+        },
+        {
+          "text": "Pondělí 07:15 na konci okna",
+          "feedback": "07:15 je čas sběru, ne konec předchozího týdne."
+        }
+      ],
+      "answer": 0
+    }
+  ],
+  "rubric": [
+    "Popsal/a jsem postup a jeho výsledek.",
+    "Výsledek jsem ověřil/a podle konkrétního podkladu nebo testu.",
+    "Uvedl/a jsem hraniční případ či nejistotu a co s ní udělám."
+  ],
+  "sources": [
+    {
+      "label": "n8n · Schedule Trigger",
+      "url": "https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.scheduletrigger/"
+    }
+  ],
+  "code": "npm run prehled -- --fixture --as-of 2026-11-16"
+}

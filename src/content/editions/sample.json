@@ -1,0 +1,33 @@
+{
+  "version": 1,
+  "id": "tyden-2026-11-09",
+  "label": "9.–15. listopadu 2026",
+  "date": "2026-11-16",
+  "status": "ukázka z příručky",
+  "title": "Jak vybrat model a uhlídat jeho práci",
+  "intro": "Pilotní vydání příručky spojuje tři oznámení s jednou otázkou. Jak vybrat model pro svou úlohu a současně udržet kontrolu nad jeho během?",
+  "items": [
+    {
+      "title": "Gemini 4 Hydrogen",
+      "announced": "12. listopadu 2026",
+      "availability": "Ověř pro svůj účet a konkrétní rozhraní.",
+      "summary": "Podle příručky Google představil model pro rychlejší vývoj a agentní práci. Měř celý běh včetně čekání na nástroje.",
+      "url": "https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-hydrogen/"
+    },
+    {
+      "title": "Claude Fable 5.2 a Mythos 5.2",
+      "announced": "9. listopadu 2026",
+      "availability": "Příručka u Mythos uvádí přístup přes ověřovací programy.",
+      "summary": "Příručka rozlišuje účel modelů a podmínky jejich přístupu. U zkoušky eviduj funkce v chatu a v API zvlášť.",
+      "url": "https://www.anthropic.com/claude-fable-and-mythos-5-2"
+    },
+    {
+      "title": "OpenAI Control Room",
+      "announced": "9. listopadu 2026",
+      "availability": "Výzkumná infrastruktura podle oznámení v příručce.",
+      "summary": "Příručka popisuje sledování a zastavení modelových běhů. Pro prototyp zkus uložený stav, limit kroků a vypínač.",
+      "url": "https://openai.com/index/control-room/"
+    }
+  ],
+  "experiment": "Připrav dva přesné, dva neúplné a dva duplicitní vstupy. Srovnej rychlou a pokročilejší variantu podle úspěšnosti, času, počtu oprav a ceny úspěšného běhu."
+}
