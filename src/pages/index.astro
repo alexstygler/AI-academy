@@ -51,7 +51,7 @@ const next = lessons[0]!;
   </div>
   <script type="application/json" id="dashboard-data" set:html={JSON.stringify(lessons.map((lesson) => ({id:lesson.id,href:lessonUrl(lesson.id),title:lesson.title,week:lesson.week,minutes:lesson.minutes,goal:lesson.goal}))).replace(/</g, '\\u003c')} />
   <script>
-    import { readProgress, progressMessage } from '../lib/progress';
+    import { readProgress, progressMessage, progressEvent } from '../lib/progress';
     const data = JSON.parse(document.querySelector('#dashboard-data')?.textContent || '[]') as Array<{id:string;href:string;title:string;week:number;minutes:number;goal:string}>;
     function refresh() {
       const state = readProgress();
@@ -69,6 +69,7 @@ const next = lessons[0]!;
       link.firstChild!.textContent = done === data.length ? 'Otevřít první lekci ' : state.data.lessons[next.id]?.opened ? 'Pokračovat v lekci ' : 'Začít lekci ';
     }
     refresh();
+    document.addEventListener(progressEvent, refresh);
     window.addEventListener('pageshow', refresh);
     window.addEventListener('storage', refresh);
   </script>

@@ -1,12 +1,14 @@
 ---
 import Shell from '../components/Shell.astro';
+import ProgressSync from '../components/ProgressSync.astro';
 import { lessons, lessonUrl, url } from '../lib/course';
 ---
 <Shell title="Můj pokrok" active="progress" breadcrumb="Můj pokrok">
   <header class="page-intro"><h1>Můj pokrok</h1><p>Otevřené lekce, úspěšná ověření a témata, ke kterým se vyplatí vrátit.</p></header>
   <div class="reading">
+    <ProgressSync />
     <section class="panel content-card">
-      <h2>Záloha a obnova</h2><p>Výsledky a poznámky jsou uložené v tomto prohlížeči. Export vytvoří přenositelnou zálohu JSON.</p>
+      <h2>Záloha a obnova</h2><p>Export uloží aktuální lekce, pokusy, poznámky a sebehodnocení do přenositelné zálohy JSON.</p>
       <p id="progress-diagnostic" class="callout warning" hidden></p>
       <div class="action-row"><button class="button" type="button" data-export>Exportovat JSON</button><button class="button secondary" type="button" data-import>Importovat JSON</button><button class="button danger" type="button" data-reset>Resetovat pokrok</button><input type="file" id="progress-file" accept=".json,application/json" hidden /></div>
       <p class="field-status" id="progress-action" role="status"></p>
@@ -22,7 +24,19 @@ import { lessons, lessonUrl, url } from '../lib/course';
     </section>
   </div>
   <script>
-    import { key, allowedIds, parseProgress, progressMessage, readProgress, writeProgress } from '../lib/progress';
+    import { allowedIds, emptyProgress, parseProgress, progressEvent, progressMessage, readActiveAccount, readProgress, resetGuestProgress, writeProgress, type Data } from '../lib/progress';
+    async function replace(data: Data, account: string | null, reset = false) {
+      if (account !== readActiveAccount()) throw new Error('Účet se mezitím změnil.');
+      if (account) {
+        const { replaceSyncedProgress } = await import('../lib/progress-sync');
+        await replaceSyncedProgress(account, data);
+      } else if (reset) resetGuestProgress();
+      else writeProgress(data);
+    }
+    const replacementError = (error: unknown, account: string | null) => account
+      ? error instanceof Error && error.message.startsWith('Pokrok se mezitím') ? error.message
+        : 'Změnu se nepodařilo potvrdit. Zkus synchronizovat a zkontroluj aktuální stav.'
+      : progressMessage('unavailable');
     const status = document.querySelector('#progress-action')!;
     const diagnostic = document.querySelector<HTMLElement>('#progress-diagnostic')!;
     const file = document.querySelector<HTMLInputElement>('#progress-file')!;
@@ -55,21 +69,24 @@ import { lessons, lessonUrl, url } from '../lib/course';
       try {
         if (selected.size > 2_000_000) throw new Error('Velikost');
         const data = parseProgress(await selected.text(), allowedIds());
-        if (!confirm('Nahradit lokální pokrok obsahem zálohy?')) return;
-        try { writeProgress(data); status.textContent = 'Pokrok byl obnoven ze zálohy.'; }
-        catch { status.textContent = progressMessage('unavailable'); }
+        const account = readActiveAccount();
+        if (!confirm(account ? 'Nahradit pokrok v účtu obsahem zálohy na všech zařízeních?' : 'Nahradit lokální pokrok obsahem zálohy?')) return;
+        try { await replace(data, account); status.textContent = 'Pokrok byl obnoven ze zálohy.'; }
+        catch (error) { status.textContent = replacementError(error, account); }
         refresh();
       } catch {
         status.textContent = 'Soubor nelze importovat. Vyber platnou zálohu JSON verze 1.';
       } finally { file.value = ''; }
     });
-    document.querySelector('[data-reset]')!.addEventListener('click', () => {
-      if (!confirm('Opravdu smazat pokrok, pokusy a poznámky v tomto prohlížeči?')) return;
-      try { localStorage.removeItem(key); status.textContent = 'Pokrok byl resetován.'; }
-      catch { status.textContent = progressMessage('unavailable'); }
+    document.querySelector('[data-reset]')!.addEventListener('click', async () => {
+      const account = readActiveAccount();
+      if (!confirm(account ? 'Opravdu smazat pokrok, pokusy a poznámky z účtu na všech zařízeních?' : 'Opravdu smazat pokrok, pokusy a poznámky v tomto prohlížeči?')) return;
+      try { await replace(emptyProgress(), account, true); status.textContent = 'Pokrok byl resetován.'; }
+      catch (error) { status.textContent = replacementError(error, account); }
       refresh();
     });
     refresh();
+    document.addEventListener(progressEvent, refresh);
     window.addEventListener('pageshow', refresh);
   </script>
 </Shell>

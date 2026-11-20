@@ -54,7 +54,7 @@ const toc = [['vyklad','Výklad'], ['priklad','Příklad'], ['vedene','Vedené c
     <aside class="lesson-aside"><section class="panel study-panel"><h2>V této lekci</h2><nav aria-label="Obsah lekce">{toc.map(([id,label]) => <a href={`#${id}`}>{label}</a>)}</nav></section><section class="panel study-panel"><h2>Můj pokrok</h2><p>Ověření se uloží po správném odevzdání všech odpovědí.</p><a href={url('pokrok')}>Správa pokroku →</a></section></aside>
   </div>
   <script>
-    import { readProgress, updateRecord, progressMessage } from '../../lib/progress';
+    import { readProgress, updateRecord, progressMessage, progressEvent } from '../../lib/progress';
     const id = document.querySelector<HTMLElement>('[data-current-lesson]')!.dataset.currentLesson!;
     updateRecord(id, (record) => { record.opened = true; });
     const showState = () => {
@@ -62,7 +62,7 @@ const toc = [['vyklad','Výklad'], ['priklad','Příklad'], ['vedene','Vedené c
       document.querySelector('[data-lesson-status]')!.textContent = state.problem ? progressMessage(state.problem) : state.data.lessons[id]?.completed ? 'Splněno' : 'Otevřeno';
     };
     showState();
-    document.addEventListener('academy-progress', showState);
+    document.addEventListener(progressEvent, showState);
     for (const button of document.querySelectorAll<HTMLButtonElement>('[data-copy]')) {
       button.addEventListener('click', async () => {
         const box = button.closest('.code-box')!;

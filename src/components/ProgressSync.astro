@@ -1,0 +1,31 @@
+---
+import { progressSyncConfig } from '../lib/progress-sync-config';
+---
+{progressSyncConfig && <section class="panel content-card" data-progress-sync>
+  <h2>Pokrok na všech zařízeních</h2>
+  <p>Přihlas se stejným e-mailem na každém zařízení. Splněné lekce, pokusy a poznámky se ukládají do tvého účtu.</p>
+  <form class="sync-form" method="dialog" data-sync-email>
+    <label for="sync-email">E-mail</label>
+    <input id="sync-email" name="email" type="email" autocomplete="email" maxlength="254" required />
+    <button type="submit" class="button secondary">Poslat přihlašovací kód</button>
+  </form>
+  <form class="sync-form" method="dialog" data-sync-code hidden>
+    <label for="sync-code">Kód z e-mailu</label>
+    <input id="sync-code" name="code" type="text" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]{6,10}" maxlength="10" required />
+    <button type="submit" class="button">Přihlásit se</button>
+  </form>
+  <div data-sync-account hidden>
+    <p class="sync-account">Přihlášeno jako <strong data-sync-address></strong></p>
+    <p class="field-status" role="status" data-sync-status></p>
+    <div class="action-row" data-sync-conflict hidden>
+      <button class="button secondary" type="button" data-sync-resolve="local">Použít verzi z tohoto zařízení</button>
+      <button class="button secondary" type="button" data-sync-resolve="cloud">Použít verzi z účtu</button>
+    </div>
+    <div class="action-row">
+      <button class="button" type="button" data-sync-migrate hidden>Přenést místní pokrok do účtu</button>
+      <button class="button secondary" type="button" data-sync-refresh>Synchronizovat teď</button>
+      <button class="button secondary" type="button" data-sync-signout>Odhlásit se</button>
+    </div>
+  </div>
+  <p class="field-status" role="status" data-sync-action></p>
+</section>}

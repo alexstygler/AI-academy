@@ -195,7 +195,7 @@ legend { padding:0 0 6px; font-weight:750; }
 .option { display:flex; align-items:flex-start; gap:8px; padding:9px 10px; border:1px solid var(--line); border-radius:8px; margin-bottom:5px; cursor:pointer; }
 .option:hover, .option:has(:checked) { border-color:#7692f5; background:#f3f6ff; }
 input[type=radio], input[type=checkbox] { accent-color:var(--blue); flex:none; margin-top:5px; }
-textarea, select, input[type="search"].filter-input, input[type="password"] { width:100%; color:var(--ink); border:1px solid #cdd7ea; border-radius:8px; background:white; padding:8px 10px; }
+textarea, select, input[type="search"].filter-input, input[type="password"], .sync-form input { width:100%; color:var(--ink); border:1px solid #cdd7ea; border-radius:8px; background:white; padding:8px 10px; }
 textarea { min-height:90px; resize:vertical; display:block; margin:4px 0 8px; }
 .action-row { display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-top:12px; }
 .quiz-feedback, .field-status { color:#32476f; padding:7px 0; font-size:13px; }
@@ -280,3 +280,11 @@ th { background:#eef3ff; }
 #source-search .filter-input { flex:1 1 180px; }
 #post-date { padding:5px; border:1px solid #cdd7ea; border-radius:7px; }
 .tool-tile:target { outline:2px solid var(--blue); }
+
+.sync-form { display: grid; grid-template-columns: minmax(0, 21rem) auto; gap: 6px 12px; align-items: end; justify-content: start; margin-top: 16px; }
+.sync-form label { grid-column: 1 / -1; font-weight: 650; }
+.sync-form input { min-height: 42px; }
+.sync-account { margin-top: 14px; overflow-wrap: anywhere; }
+@media (max-width: 560px) {
+  .sync-form { grid-template-columns: minmax(0, 1fr); justify-items: start; }
+}

@@ -201,3 +201,139 @@ test('bez JavaScriptu formulář neposílá kód tutora ani osobní poznámku v 
     assert.equal(page.url(),address);
   });
 });
+
+test('synchronizace přenese vybraný místní pokrok, sdílí poznámky a oddělí účty', async () => {
+  const accounts = new Map([
+    ['alex@example.test', '11111111-1111-4111-8111-111111111111'],
+    ['student@example.test', '22222222-2222-4222-8222-222222222222'],
+  ]);
+  const rows = new Map();
+  const tokens = new Map();
+  const requested = new Set();
+  const contexts = [];
+  const errors = [];
+  const cors = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Headers': 'apikey, authorization, content-type, x-client-info, x-supabase-api-version',
+    'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+  };
+  async function device() {
+    const context = await browser.newContext();
+    contexts.push(context);
+    const page = await context.newPage();
+    page.setDefaultTimeout(7000);
+    page.on('pageerror', (error) => errors.push(error.message));
+    await context.route('https://sync.academy.test/**', async (intercept) => {
+      const req = intercept.request();
+      const url = new URL(req.url());
+      const response = (json, status = 200) => intercept.fulfill({ headers:cors, json, status });
+      if (req.method() === 'OPTIONS') return intercept.fulfill({ status:204, headers:cors });
+      const body = req.postData() ? req.postDataJSON() : null;
+      if (url.pathname === '/auth/v1/otp') {
+        requested.add(body.email);
+        return response({});
+      }
+      if (url.pathname === '/auth/v1/verify') {
+        assert.equal(body.token, '654321');
+        assert.equal(requested.has(body.email), true);
+        const id = accounts.get(body.email);
+        assert.ok(id);
+        const jwt = ['{"alg":"HS256","typ":"JWT"}', JSON.stringify({sub:id,exp:Math.floor(Date.now()/1000)+3600}), id]
+          .map((part) => Buffer.from(part).toString('base64url')).join('.');
+        tokens.set(jwt, id);
+        return response({ access_token:jwt, refresh_token:'test-refresh-token', expires_in:3600, token_type:'bearer',
+          user:{id,email:body.email,aud:'authenticated',role:'authenticated',user_metadata:{},app_metadata:{}} });
+      }
+      if (url.pathname === '/auth/v1/logout') return intercept.fulfill({ status:204, headers:cors });
+      const id = tokens.get(req.headers().authorization?.replace('Bearer ', ''));
+      if (!id) return response({ message:'Unauthorized' }, 401);
+      const current = rows.get(id);
+      if (url.pathname === '/rest/v1/academy_progress') {
+        assert.equal(url.searchParams.get('user_id'), 'eq.' + id);
+        return response(current ? [current] : []);
+      }
+      if (url.pathname === '/rest/v1/rpc/save_academy_progress') {
+        assert.equal(body.account_id, id);
+        if ((current?.revision || 0) !== body.expected_revision) return response([]);
+        const row = {
+          revision: body.expected_revision + 1,
+          generation: (current?.generation || 0) + Number(body.replace_progress),
+          data: body.progress_payload,
+        };
+        rows.set(id, row);
+        return response([row]);
+      }
+      throw new Error('Neočekávaný požadavek: ' + url.pathname);
+    });
+    return page;
+  }
+  const dashboard = route('pokrok/', liveBase);
+  const lesson = route('lekce/jak-model-pracuje/', liveBase);
+  const doneRow = (page) => page.locator('[data-progress-row="jak-model-pracuje"] [data-state]');
+  async function login(page, email) {
+    await page.goto(dashboard);
+    await page.getByRole('textbox', { name:'E-mail', exact:true }).fill(email);
+    await page.getByRole('button', { name:'Poslat přihlašovací kód' }).click();
+    await page.getByLabel('Kód z e-mailu').fill('654321');
+    await page.getByRole('button', { name:'Přihlásit se', exact:true }).click();
+    await page.getByText('Pokrok je synchronizovaný.', { exact:true }).waitFor();
+  }
+  const save = (page) => page.waitForResponse((result) => result.url().endsWith('/rpc/save_academy_progress') && result.ok());
+  try {
+    const computer = await device();
+    await computer.goto(lesson);
+    await computer.getByRole('radio', {name:'Pracovní kontext aktuálního běhu'}).check();
+    await computer.getByRole('radio', {name:'Otevřu původní pasáž a zkontroluji účinnost'}).check();
+    await computer.getByRole('button', {name:'Odevzdat odpovědi'}).click();
+    await computer.getByLabel('Tvoje řešení a poznámka').fill('Místní poznámka');
+    await computer.getByRole('button', {name:'Uložit poznámku'}).click();
+
+    await login(computer, 'alex@example.test');
+    assert.equal(rows.size,0);
+    assert.equal(await doneRow(computer).textContent(),'Neotevřeno');
+    const firstWrite = save(computer);
+    computer.once('dialog', (dialog) => dialog.accept());
+    await computer.getByRole('button', {name:'Přenést místní pokrok do účtu'}).click();
+    await firstWrite;
+    await doneRow(computer).getByText('Splněno', { exact:true }).waitFor();
+
+    const phone = await device();
+    await login(phone, 'alex@example.test');
+    assert.equal(await doneRow(phone).textContent(),'Splněno');
+    assert.equal(await phone.locator('[data-progress-row="jak-model-pracuje"] [data-attempts]').textContent(),'1');
+    await phone.goto(lesson);
+    assert.equal(await phone.getByLabel('Tvoje řešení a poznámka').inputValue(),'Místní poznámka');
+    await phone.getByLabel('Tvoje řešení a poznámka').fill('Poznámka z druhého zařízení');
+    const secondWrite = save(phone);
+    await phone.getByRole('button', {name:'Uložit poznámku'}).click();
+    await secondWrite;
+
+    await computer.goto(lesson);
+    await computer.waitForFunction(() => document.querySelector('textarea[name=note]')?.value === 'Poznámka z druhého zařízení');
+    const otherAccount = await device();
+    await login(otherAccount, 'student@example.test');
+    assert.equal(await doneRow(otherAccount).textContent(),'Neotevřeno');
+
+    await computer.goto(dashboard);
+    await computer.getByText('Pokrok je synchronizovaný.', {exact:true}).waitFor();
+    await phone.goto(dashboard);
+    await phone.getByText('Pokrok je synchronizovaný.', {exact:true}).waitFor();
+    const resetWrite = save(phone);
+    phone.once('dialog', async (dialog) => {
+      assert.match(dialog.message(), /na všech zařízeních/);
+      await dialog.accept();
+    });
+    await phone.getByRole('button', {name:'Resetovat pokrok'}).click();
+    await resetWrite;
+    await phone.getByText('Pokrok byl resetován.', {exact:true}).waitFor();
+    await computer.getByRole('button', {name:'Synchronizovat teď'}).click();
+    await doneRow(computer).getByText('Neotevřeno', {exact:true}).waitFor();
+    assert.equal(rows.get(accounts.get('alex@example.test')).generation,1);
+
+    await computer.getByRole('button', {name:'Odhlásit se'}).click();
+    await computer.getByText('Odhlášení proběhlo.', {exact:true}).waitFor();
+    await computer.goto(lesson);
+    assert.equal(await computer.getByLabel('Tvoje řešení a poznámka').inputValue(),'Místní poznámka');
+    assert.deepEqual(errors, []);
+  } finally { await Promise.all(contexts.map((ctx) => ctx.close())); }
+});

@@ -15,7 +15,7 @@ const {id, questions, label = 'Odevzdat odpovědi'} = Astro.props;
 </form>
 <script>
   import { grade } from '../lib/quiz.mjs';
-  import { readProgress, updateRecord, progressMessage } from '../lib/progress';
+  import { readProgress, updateRecord, progressMessage, progressEvent } from '../lib/progress';
   for (const form of document.querySelectorAll<HTMLFormElement>('[data-quiz]')) {
     const id = form.dataset.quiz!;
     const questions = JSON.parse(form.querySelector('script')!.textContent!);
@@ -31,11 +31,25 @@ const {id, questions, label = 'Odevzdat odpovědi'} = Astro.props;
       }
       status.textContent = (saved ? 'Poslední uložený pokus. ' : '') + `${result.score} z ${result.total}. ${result.score === result.total ? 'Ověření splněno.' : 'Pročti vysvětlení a zkus další pokus.'}`;
     };
-    const last = readProgress().data.lessons[id]?.attempts.at(-1);
-    if (last) {
-      for (const input of form.querySelectorAll<HTMLInputElement>('input[type=radio]')) input.checked = Number(input.value) === last.answers[input.name];
-      try { paint(grade(questions, last.answers), true); } catch { /* Nová revize může obsahovat jiné otázky. */ }
-    }
+    let unsent = false;
+    const load = () => {
+      const last = readProgress().data.lessons[id]?.attempts.at(-1);
+      for (const input of form.querySelectorAll<HTMLInputElement>('input[type=radio]')) {
+        input.checked = Number(input.value) === last?.answers[input.name];
+      }
+      for (const element of feedback.values()) element.hidden = true;
+      status.textContent = '';
+      unsent = false;
+      if (last) {
+        try { paint(grade(questions, last.answers), true); } catch { /* Nová revize může obsahovat jiné otázky. */ }
+      }
+    };
+    load();
+    form.addEventListener('input', () => { unsent = true; });
+    document.addEventListener(progressEvent, (event) => {
+      const source = (event as CustomEvent).detail;
+      if (source === 'account' || (source === 'cloud' && !unsent)) load();
+    });
     form.addEventListener('submit', (event) => {
       event.preventDefault();
       const answers = Object.fromEntries([...new FormData(form)].map(([key, value]) => [key, Number(value)]));
@@ -47,7 +61,7 @@ const {id, questions, label = 'Odevzdat odpovědi'} = Astro.props;
         record.attempts = [...record.attempts.slice(-99), { at: new Date().toISOString(), score: result.score, total: result.total, answers }];
       });
       if (problem) status.textContent += ' ' + progressMessage(problem);
-      else document.dispatchEvent(new Event('academy-progress'));
+      else unsent = false;
     });
   }
 </script>

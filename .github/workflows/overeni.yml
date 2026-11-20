@@ -26,7 +26,10 @@ jobs:
         run: |
           npm run preview -- --host 127.0.0.1 --port 4321 &
           preview_pid=$!
-          PUBLIC_TUTOR_URL=https://tutor.academy.test/v1/tutor ACADEMY_BUILD_DIR=dist-test npm run build
+          PUBLIC_TUTOR_URL=https://tutor.academy.test/v1/tutor \
+            PUBLIC_SUPABASE_URL=https://sync.academy.test \
+            PUBLIC_SUPABASE_PUBLISHABLE_KEY=sb_publishable_browser_fixture \
+            ACADEMY_BUILD_DIR=dist-test npm run build
           ACADEMY_BUILD_DIR=dist-test npm run preview -- --host 127.0.0.1 --port 4322 &
           tutor_fixture_pid=$!
           trap 'kill "$preview_pid" "$tutor_fixture_pid" 2>/dev/null || true' EXIT

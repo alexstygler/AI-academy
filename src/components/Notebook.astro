@@ -13,20 +13,31 @@ const { id, rubric, label = 'Tvoje řešení a poznámka' } = Astro.props;
   <p role="status" class="field-status" data-notebook-status></p>
 </form>
 <script>
-  import { readProgress, updateRecord, progressMessage } from '../lib/progress';
+  import { readProgress, updateRecord, progressMessage, progressEvent } from '../lib/progress';
   for (const form of document.querySelectorAll<HTMLFormElement>('[data-notebook]')) {
     const id = form.dataset.notebook!;
-    const record = readProgress().data.lessons[id];
     const note = form.querySelector<HTMLTextAreaElement>('textarea')!;
     const status = form.querySelector('[data-notebook-status]')!;
-    if (record) {
-      note.value = record.note;
-      for (const checkbox of form.querySelectorAll<HTMLInputElement>('input[name=rubric]')) checkbox.checked = record.rubric.includes(Number(checkbox.value));
-    }
+    let unsaved = false;
+    const load = () => {
+      const record = readProgress().data.lessons[id];
+      note.value = record?.note ?? '';
+      for (const checkbox of form.querySelectorAll<HTMLInputElement>('input[name=rubric]')) {
+        checkbox.checked = record?.rubric.includes(Number(checkbox.value)) ?? false;
+      }
+      unsaved = false;
+    };
+    load();
+    form.addEventListener('input', () => { unsaved = true; });
+    document.addEventListener(progressEvent, (event) => {
+      const source = (event as CustomEvent).detail;
+      if (source === 'account' || (source === 'cloud' && !unsaved)) load();
+    });
     form.addEventListener('submit', (event) => {
       event.preventDefault();
       const checked = new FormData(form).getAll('rubric').map(Number);
       const problem = updateRecord(id, (entry) => { entry.note = note.value; entry.rubric = checked; entry.opened = true; });
+      if (!problem) unsaved = false;
       status.textContent = problem ? progressMessage(problem) : 'Poznámka je uložená v tomto prohlížeči.';
     });
   }

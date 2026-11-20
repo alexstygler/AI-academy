@@ -62,6 +62,15 @@ const navigation = [
       <p class="search-empty" role="status">Zadej téma, třeba „citace“.</p>
     </dialog>
     <script>
+      if (import.meta.env.PUBLIC_SUPABASE_URL && import.meta.env.PUBLIC_SUPABASE_PUBLISHABLE_KEY) {
+        void import('../lib/progress-sync').then(({ connectProgressPanel }) => {
+          const panel = document.querySelector<HTMLElement>('[data-progress-sync]');
+          if (panel) connectProgressPanel(panel);
+        }).catch(() => {
+          const action = document.querySelector('[data-sync-action]');
+          if (action) action.textContent = 'Synchronizaci se nepodařilo spustit. Zkus obnovit stránku.';
+        });
+      }
       const dialog = document.querySelector<HTMLDialogElement>('.search-dialog')!;
       const search = document.querySelector<HTMLInputElement>('#global-search')!;
       const results = [...dialog.querySelectorAll<HTMLLIElement>('[data-result]')];
